@@ -1,47 +1,47 @@
-import { question } from "../utils/prompt";
+import { Menu } from "./menu";
 
-export async function autoresMenu(): Promise<void> {
-  let running = true;
+export class AutoresMenu extends Menu {
+  protected title = "Gerenciar Autores";
 
-  while (running) {
-    console.clear();
-    console.log("=== Gerenciar Autores ===\n");
-    console.log("1 - Cadastrar autores");
-    console.log("2 - Listar autores");
-    console.log("3 - Consultar um autor por identificador");
-    console.log("4 - Atualizar autores");
-    console.log("5 - Remover autores");
-    console.log("6 - Voltar\n");
-
-    const option = await question(" ");
-
-    switch (option.trim()) {
-      case "1":
+  protected options = [
+    {
+      label: "Cadastrar autores",
+      handler: async () => {
         console.log("\nFuncionalidade: Cadastrar autores.\n");
-        await question("Pressione Enter para voltar...");
-        break;
-      case "2":
+        await this.question("Pressione Enter para voltar...");
+      },
+    },
+    {
+      label: "Listar autores",
+      handler: async () => {
         console.log("\nFuncionalidade: Listar autores.\n");
-        await question("Pressione Enter para voltar...");
-        break;
-      case "3":
+        await this.question("Pressione Enter para voltar...");
+      },
+    },
+    {
+      label: "Consultar um autor por identificador",
+      handler: async () => {
         console.log("\nFuncionalidade: Consultar autor por identificador.\n");
-        await question("Pressione Enter para voltar...");
-        break;
-      case "4":
+        await this.question("Pressione Enter para voltar...");
+      },
+    },
+    {
+      label: "Atualizar autores",
+      handler: async () => {
         console.log("\nFuncionalidade: Atualizar autores.\n");
-        await question("Pressione Enter para voltar...");
-        break;
-      case "5":
+        await this.question("Pressione Enter para voltar...");
+      },
+    },
+    {
+      label: "Remover autores",
+      handler: async () => {
         console.log("\nFuncionalidade: Remover autores.\n");
-        await question("Pressione Enter para voltar...");
-        break;
-      case "6":
-        running = false;
-        break;
-      default:
-        console.log("\nOpção inválida!\n");
-        await question("Pressione Enter para continuar...");
-    }
-  }
+        await this.question("Pressione Enter para voltar...");
+      },
+    },
+    {
+      label: "Voltar",
+      handler: async () => {},
+    },
+  ];
 }
