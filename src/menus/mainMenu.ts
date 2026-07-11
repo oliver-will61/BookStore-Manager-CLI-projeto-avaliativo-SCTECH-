@@ -1,13 +1,5 @@
-import * as readline from "readline";
-
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-});
-
-function question(prompt: string): Promise<string> {
-  return new Promise((resolve) => rl.question(prompt, resolve));
-}
+import { question, close } from "../utils/prompt";
+import { autoresMenu } from "./autoresMenu";
 
 function showOptions(): void {
   console.clear();
@@ -29,33 +21,32 @@ export async function mainMenu(): Promise<void> {
 
     switch (option.trim()) {
       case "1":
-        console.log("\nOpção Autores selecionada.\n");
-        await question("Pressione Enter para voltar ao menu...");
+        await autoresMenu();
         break;
       case "2":
-        console.log("\nOpção Livros selecionada.\n");
-        await question("Pressione Enter para voltar ao menu...");
+        console.log("\nFuncionalidade: Livros.\n");
+        await question("Pressione Enter para voltar...");
         break;
       case "3":
-        console.log("\nOpção Clientes selecionada.\n");
-        await question("Pressione Enter para voltar ao menu...");
+        console.log("\nFuncionalidade: Clientes.\n");
+        await question("Pressione Enter para voltar...");
         break;
       case "4":
-        console.log("\nOpção Empréstimos selecionada.\n");
-        await question("Pressione Enter para voltar ao menu...");
+        console.log("\nFuncionalidade: Empréstimos.\n");
+        await question("Pressione Enter para voltar...");
         break;
       case "5":
-        console.log("\nOpção Relatórios selecionada.\n");
-        await question("Pressione Enter para voltar ao menu...");
+        console.log("\nFuncionalidade: Relatórios.\n");
+        await question("Pressione Enter para voltar...");
         break;
       case "6":
         running = false;
         break;
       default:
-        console.log("\nOpção inválida! Tente novamente.\n");
+        console.log("\nOpção inválida!\n");
         await question("Pressione Enter para continuar...");
     }
   }
 
-  rl.close();
+  close();
 }
