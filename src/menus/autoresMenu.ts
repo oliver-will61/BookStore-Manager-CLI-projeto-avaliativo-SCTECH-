@@ -1,4 +1,5 @@
 import { Menu } from "./menu";
+import { controllerCadastraAutor } from "../controllers/autorController";
 
 export class AutoresMenu extends Menu {
   protected title = "Gerenciar Autores";
@@ -7,7 +8,22 @@ export class AutoresMenu extends Menu {
     {
       label: "Cadastrar autores",
       handler: async () => {
-        console.log("\nFuncionalidade: Cadastrar autores.\n");
+        console.clear();
+        console.log("=== Cadastrar Autor ===\n");
+
+        //input nome
+        const nome = await this.question("Nome: "); 
+
+        //input nacionalidade
+        const nacionalidade = await this.question("Nacionalidade: ");  
+        
+        //input data de nascimento
+        const dataNascimento = await this.question("Data de nascimento (AAAA-MM-DD): "); 
+
+        //chama controller
+        const resultado = await controllerCadastraAutor(nome, nacionalidade, dataNascimento);
+        console.log(`\n${resultado.mensagem}`); //exibe a mensagem do resultado
+
         await this.question("Pressione Enter para voltar...");
       },
     },
