@@ -1,5 +1,5 @@
 import { Menu } from "./menu";
-import { controllerCadastraAutor, controllerListarAutores } from "../controllers/autorController";
+import { controllerCadastraAutor, controllerListarAutores, controllerConsultarAutor } from "../controllers/autorController";
 
 export class AutoresMenu extends Menu {
   protected title = "Gerenciar Autores";
@@ -8,8 +8,7 @@ export class AutoresMenu extends Menu {
     {
       label: "Cadastrar autores",
       handler: async () => {
-        console.clear();
-        console.log("=== Cadastrar Autor ===\n");
+        console.log("\n=== Cadastrar Autor ===\n");
 
         //input nome
         const nome = await this.question("Nome: "); 
@@ -30,8 +29,7 @@ export class AutoresMenu extends Menu {
     {
       label: "Listar autores",
       handler: async () => {
-        console.clear();
-        console.log("=== Listar Autores ===\n");
+        console.log("\n=== Listar Autores ===\n");
 
         // Chama o controller que busca todos os autores
         const resultado = await controllerListarAutores();
@@ -58,8 +56,29 @@ export class AutoresMenu extends Menu {
     {
       label: "Consultar um autor por identificador",
       handler: async () => {
-        console.log("\nFuncionalidade: Consultar autor por identificador.\n");
-        await this.question("Pressione Enter para voltar...");
+        console.log("\n=== Consultar Autor por ID ===\n");
+
+        // Solicita o ID ao usuário
+        const id = await this.question("ID do autor: ");
+
+        // Chama o controller que busca o autor pelo ID
+        const resultado = await controllerConsultarAutor(Number(id));
+
+        if (!resultado.sucesso) {
+          // Se houve erro, exibe a mensagem de erro
+          console.log(`\n${resultado.mensagem}`);
+        } else if (resultado.autor) {
+          // Se encontrou, exibe todos os dados do autor
+          console.log(`\nID: ${resultado.autor.id}`);
+          console.log(`Nome: ${resultado.autor.nome}`);
+          console.log(`Nacionalidade: ${resultado.autor.nacionalidade ?? "-"}`);
+          console.log(`Data de nascimento: ${resultado.autor.data_nascimento ?? "-"}`);
+        } else {
+          // Se não encontrou, exibe mensagem
+          console.log(`\n${resultado.mensagem}`);
+        }
+
+        await this.question("\nPressione Enter para voltar...");
       },
     },
     {

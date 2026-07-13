@@ -1,5 +1,5 @@
 // Importa as funções do repository para cadastrar e buscar autor
-import { repositoryCadastraAutor, repositoryBuscarPorNome, repositoryListarAutores } from "../repositories/autorRepository";
+import { repositoryCadastraAutor, repositoryBuscarPorNome, repositoryListarAutores, repositoryBuscarPorId } from "../repositories/autorRepository";
 
 import {AutorRow} from "../models/interfaces/AutorInterface"
 
@@ -52,4 +52,17 @@ export async function ServiceListarAutores(): Promise<{
     autores,
     vazio: autores.length === 0, //valida está vázio, se estiver vazio retorna true
   };
+}
+
+// Função que contém as regras de negócio para consultar um autor por ID
+export async function ServiceConsultarAutor(
+  id: number // ID do autor a consultar
+): Promise<AutorRow | null> {
+  // Valida se o ID é um número positivo
+  if (!id || id <= 0) {
+    throw new Error("ID inválido.");
+  }
+
+  // Busca o autor pelo ID no banco
+  return await repositoryBuscarPorId(id);
 }

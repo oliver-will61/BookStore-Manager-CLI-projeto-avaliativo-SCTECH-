@@ -1,5 +1,5 @@
 // Importa os services que contém as regras de negócio para cadastrar e listar autores
-import { ServiceCadastraAutor, ServiceListarAutores } from "../services/autorService";
+import { ServiceCadastraAutor, ServiceListarAutores, ServiceConsultarAutor } from "../services/autorService";
 // Importa a interface AutorRow para tipar o retorno opcional
 import {AutorRow} from "../models/interfaces/AutorInterface"
 
@@ -60,6 +60,38 @@ export async function controllerListarAutores(): Promise<{
       error instanceof Error
         ? error.message
         : "Erro inesperado ao listar autores.";
+    return { sucesso: false, mensagem };
+  }
+}
+
+// Função que orquestra a consulta de um autor por ID, chamada pelo menu
+export async function controllerConsultarAutor(
+  id: number // ID do autor informado no menu
+): Promise<{ sucesso: boolean; mensagem: string; autor?: AutorRow }> {
+  // Tenta executar o fluxo de consulta
+  try {
+    // Chama o service que valida o ID e busca o autor no banco
+    const autor = await ServiceConsultarAutor(id);
+
+    if (!autor) {
+      // Se não encontrou o autor, retorna mensagem específica
+      return {
+        sucesso: true,
+        mensagem: "Autor não encontrado.",
+      };
+    }
+
+    // Se encontrou, retorna sucesso com os dados completos do autor
+    return {
+      sucesso: true,
+      mensagem: "Autor encontrado.",
+      autor,
+    };
+  } catch (error) { // Captura qualquer erro lançado pelo service (validação ou banco)
+    const mensagem =
+      error instanceof Error
+        ? error.message
+        : "Erro inesperado ao consultar autor.";
     return { sucesso: false, mensagem };
   }
 }

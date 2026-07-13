@@ -28,8 +28,7 @@ export abstract class Menu {
 
   // Exibe o título e as opções numeradas no terminal
   private async showMenu(): Promise<void> {
-    console.clear(); // Limpa a tela do terminal
-    console.log(`=== ${this.title} ===\n`); // Exibe o título centralizado
+    console.log(`\n=== ${this.title} ===\n`); // Exibe o título centralizado
     this.options.forEach((opt, index) => {
       console.log(`${index + 1} - ${opt.label}`); // Mostra número + label de cada opção
     });
