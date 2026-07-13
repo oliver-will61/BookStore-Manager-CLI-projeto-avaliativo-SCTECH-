@@ -1,5 +1,5 @@
 import { Menu } from "./menu";
-import { controllerCadastraAutor } from "../controllers/autorController";
+import { controllerCadastraAutor, controllerListarAutores } from "../controllers/autorController";
 
 export class AutoresMenu extends Menu {
   protected title = "Gerenciar Autores";
@@ -30,8 +30,29 @@ export class AutoresMenu extends Menu {
     {
       label: "Listar autores",
       handler: async () => {
-        console.log("\nFuncionalidade: Listar autores.\n");
-        await this.question("Pressione Enter para voltar...");
+        console.clear();
+        console.log("=== Listar Autores ===\n");
+
+        // Chama o controller que busca todos os autores
+        const resultado = await controllerListarAutores();
+
+        if (!resultado.sucesso) {
+          // Se houve erro, exibe a mensagem de erro
+          console.log(resultado.mensagem);
+        } else if (resultado.autores && resultado.autores.length > 0) {
+          // Se há autores, exibe cada um com ID, nome, nacionalidade e data
+          for (const autor of resultado.autores) {
+            console.log(
+              `ID: ${autor.id} | Nome: ${autor.nome} | Nacionalidade: ${autor.nacionalidade ?? "-"} | Nascimento: ${autor.data_nascimento ?? "-"}`
+            );
+          }
+          console.log(`\n${resultado.mensagem}`);
+        } else {
+          // Se a lista está vazia, exibe mensagem
+          console.log(resultado.mensagem);
+        }
+
+        await this.question("\nPressione Enter para voltar...");
       },
     },
     {

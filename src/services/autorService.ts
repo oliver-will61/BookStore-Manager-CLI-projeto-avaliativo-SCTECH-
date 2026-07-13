@@ -1,5 +1,5 @@
 // Importa as funções do repository para cadastrar e buscar autor
-import { repositoryCadastraAutor, repositoryBuscarPorNome } from "../repositories/autorRepository";
+import { repositoryCadastraAutor, repositoryBuscarPorNome, repositoryListarAutores } from "../repositories/autorRepository";
 
 import {AutorRow} from "../models/interfaces/AutorInterface"
 
@@ -37,4 +37,19 @@ export async function ServiceCadastraAutor(
   // Após validações, chama o repository para persistir no banco e retorna o autor criado
   // O nome é enviado sem espaços nas bordas (trim)
   return await repositoryCadastraAutor(nome.trim(), nacionalidadeTratada, dataTratada);
+}
+
+// Função que contém as regras de negócio para listar autores
+export async function ServiceListarAutores(): Promise<{
+  autores: AutorRow[];
+  vazio: boolean;
+}> {
+  // Busca todos os autores no banco
+  const autores = await repositoryListarAutores();
+
+  // Retorna a lista e um indicador se está vazia
+  return {
+    autores,
+    vazio: autores.length === 0, //valida está vázio, se estiver vazio retorna true
+  };
 }

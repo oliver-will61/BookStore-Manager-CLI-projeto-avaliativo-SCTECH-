@@ -10,6 +10,12 @@ export async function repositoryBuscarPorNome(
   return (await BaseRepository.findBy("autores", "nome", nome)) as unknown as AutorRow | null;
 }
 
+// Função que retorna todos os autores cadastrados, ordenados por ID
+export async function repositoryListarAutores(): Promise<AutorRow[]> {
+  // Chama o método genérico findAll do BaseRepository
+  return (await BaseRepository.findAll("autores")) as unknown as AutorRow[];
+}
+
 // Função responsável por inserir um autor no banco, chamada pelo service
 export async function repositoryCadastraAutor(
   nome: string, //nome tratado
