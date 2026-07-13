@@ -1,5 +1,5 @@
-// Importa a função do repository que insere o autor no banco e a interface AutorRow
-import { repositoryCadastraAutor} from "../repositories/autorRepository";
+// Importa as funções do repository para cadastrar e buscar autor
+import { repositoryCadastraAutor, repositoryBuscarPorNome } from "../repositories/autorRepository";
 
 import {AutorRow} from "../models/interfaces/AutorInterface"
 
@@ -24,6 +24,14 @@ export async function ServiceCadastraAutor(
   if (dataTratada && !/^\d{4}-\d{2}-\d{2}$/.test(dataTratada)) {
     // A regex exige exatamente: 4 dígitos, hífen, 2 dígitos, hífen, 2 dígitos
     throw new Error("Data deve estar no formato AAAA-MM-DD.");
+  }
+
+  // Verifica se já existe um autor com o mesmo nome no banco
+  const autorExistente = await repositoryBuscarPorNome(nome.trim());
+
+  if (autorExistente) {
+    // Se encontrou um autor com o mesmo nome, lança erro para evitar duplicidade
+    throw new Error("Já existe um autor cadastrado com este nome.");
   }
 
   // Após validações, chama o repository para persistir no banco e retorna o autor criado

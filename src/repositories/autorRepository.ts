@@ -2,6 +2,14 @@
 import { BaseRepository } from "../models/classes/BaseRepository";
 import {AutorRow} from "../models/interfaces/AutorInterface"
 
+// Função que busca um autor pelo nome (exato), usada para validar duplicidade
+export async function repositoryBuscarPorNome(
+  nome: string // Nome exato a ser buscado
+): Promise<AutorRow | null> {
+  // Chama o método genérico findBy do BaseRepository
+  return (await BaseRepository.findBy("autores", "nome", nome)) as unknown as AutorRow | null;
+}
+
 // Função responsável por inserir um autor no banco, chamada pelo service
 export async function repositoryCadastraAutor(
   nome: string, //nome tratado

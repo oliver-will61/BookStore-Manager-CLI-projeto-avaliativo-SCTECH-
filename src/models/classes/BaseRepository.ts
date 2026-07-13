@@ -45,6 +45,21 @@ export class BaseRepository {
     return result.rows[0] || null;
   }
 
+  static async findBy(
+    tabela: string,
+    coluna: string,
+    valor: unknown
+  ): Promise<Record<string, unknown> | null> {
+    validarTabela(tabela);
+
+    const result = await pool.query(
+      `SELECT * FROM ${tabela} WHERE ${coluna} = $1`,
+      [valor]
+    );
+
+    return result.rows[0] || null;
+  }
+
   static async findAll(
     tabela: string
   ): Promise<Record<string, unknown>[]> {
