@@ -2,6 +2,13 @@
 import { BaseRepository } from "../models/classes/BaseRepository";
 import {AutorRow} from "../models/interfaces/AutorInterface"
 
+// Função responsável por remover um autor pelo ID
+export async function repositoryRemoverAutor(
+  id: number // ID do autor a remover
+): Promise<boolean> {
+  return await BaseRepository.delete("autores", id);
+}
+
 // Função que busca um autor pelo nome (exato), usada para validar duplicidade
 export async function repositoryBuscarPorNome(
   nome: string // Nome exato a ser buscado

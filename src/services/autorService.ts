@@ -1,5 +1,5 @@
 // Importa as funções do repository para cadastrar e buscar autor
-import { repositoryCadastraAutor, repositoryBuscarPorNome, repositoryListarAutores, repositoryBuscarPorId, repositoryAtualizarAutor } from "../repositories/autorRepository";
+import { repositoryCadastraAutor, repositoryBuscarPorNome, repositoryListarAutores, repositoryBuscarPorId, repositoryAtualizarAutor, repositoryRemoverAutor } from "../repositories/autorRepository";
 
 import {AutorRow} from "../models/interfaces/AutorInterface"
 
@@ -118,4 +118,27 @@ export async function ServiceAtualizarAutor(
   }
 
   return autorAtualizado;
+}
+
+// Função que contém as regras de negócio para remover um autor
+export async function ServiceRemoverAutor(
+  id: number // ID do autor a remover
+): Promise<void> {
+  // Valida se o ID é um número positivo
+  if (!id || id <= 0) {
+    throw new Error("ID inválido.");
+  }
+
+  // Verifica se o autor existe antes de remover
+  const autor = await repositoryBuscarPorId(id);
+  if (!autor) {
+    throw new Error("Autor não encontrado.");
+  }
+
+  // Chama o repository para remover o autor
+  const removido = await repositoryRemoverAutor(id);
+
+  if (!removido) {
+    throw new Error("Erro ao remover autor.");
+  }
 }

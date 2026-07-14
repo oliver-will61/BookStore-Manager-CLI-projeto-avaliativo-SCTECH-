@@ -1,5 +1,5 @@
 import { Menu } from "./menu";
-import { controllerCadastraAutor, controllerListarAutores, controllerConsultarAutor, controllerAtualizarAutor } from "../controllers/autorController";
+import { controllerCadastraAutor, controllerListarAutores, controllerConsultarAutor, controllerAtualizarAutor, controllerRemoverAutor } from "../controllers/autorController";
 import { formatarData } from "../utils/formatDate";
 
 export class AutoresMenu extends Menu {
@@ -133,7 +133,13 @@ export class AutoresMenu extends Menu {
     {
       label: "Remover autores",
       handler: async () => {
-        console.log("\nFuncionalidade: Remover autores.\n");
+        console.log("\n=== Remover Autor ===\n");
+
+        const id = await this.question("ID do autor: ");
+
+        const resultado = await controllerRemoverAutor(Number(id));
+        console.log(`\n${resultado.mensagem}`);
+
         await this.question("Pressione Enter para voltar...");
       },
     },

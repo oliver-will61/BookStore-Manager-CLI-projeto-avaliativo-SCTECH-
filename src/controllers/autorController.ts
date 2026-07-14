@@ -1,5 +1,5 @@
 // Importa os services que contém as regras de negócio para cadastrar e listar autores
-import { ServiceCadastraAutor, ServiceListarAutores, ServiceConsultarAutor, ServiceAtualizarAutor } from "../services/autorService";
+import { ServiceCadastraAutor, ServiceListarAutores, ServiceConsultarAutor, ServiceAtualizarAutor, ServiceRemoverAutor } from "../services/autorService";
 // Importa a interface AutorRow para tipar o retorno opcional
 import {AutorRow} from "../models/interfaces/AutorInterface"
 
@@ -115,6 +115,25 @@ export async function controllerAtualizarAutor(
       error instanceof Error
         ? error.message
         : "Erro inesperado ao atualizar autor.";
+    return { sucesso: false, mensagem };
+  }
+}
+
+// Função que orquestra a remoção de um autor, chamada pelo menu
+export async function controllerRemoverAutor(
+  id: number // ID do autor informado no menu
+): Promise<{ sucesso: boolean; mensagem: string }> {
+  try {
+    await ServiceRemoverAutor(id);
+    return {
+      sucesso: true,
+      mensagem: "Autor removido com sucesso!",
+    };
+  } catch (error) {
+    const mensagem =
+      error instanceof Error
+        ? error.message
+        : "Erro inesperado ao remover autor.";
     return { sucesso: false, mensagem };
   }
 }
