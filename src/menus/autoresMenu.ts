@@ -1,5 +1,6 @@
 import { Menu } from "./menu";
 import { controllerCadastraAutor, controllerListarAutores, controllerConsultarAutor } from "../controllers/autorController";
+import { formatarData } from "../utils/formatDate";
 
 export class AutoresMenu extends Menu {
   protected title = "Gerenciar Autores";
@@ -17,8 +18,8 @@ export class AutoresMenu extends Menu {
         const nacionalidade = await this.question("Nacionalidade: ");  
         
         //input data de nascimento
-        const dataNascimento = await this.question("Data de nascimento (AAAA-MM-DD): "); 
-
+        const dataNascimento = await this.question("Data de nascimento (AAAA-MM-DD): "); //formato aceito pelo postgreSQL
+        
         //chama controller
         const resultado = await controllerCadastraAutor(nome, nacionalidade, dataNascimento);
         console.log(`\n${resultado.mensagem}`); //exibe a mensagem do resultado
@@ -40,8 +41,9 @@ export class AutoresMenu extends Menu {
         } else if (resultado.autores && resultado.autores.length > 0) {
           // Se há autores, exibe cada um com ID, nome, nacionalidade e data
           for (const autor of resultado.autores) {
+            const data = formatarData(autor.data_nascimento);
             console.log(
-              `ID: ${autor.id} | Nome: ${autor.nome} | Nacionalidade: ${autor.nacionalidade ?? "-"} | Nascimento: ${autor.data_nascimento ?? "-"}`
+              `ID: ${autor.id} | Nome: ${autor.nome} | Nacionalidade: ${autor.nacionalidade ?? "-"} | Nascimento: ${data}`
             );
           }
           console.log(`\n${resultado.mensagem}`);
@@ -69,10 +71,11 @@ export class AutoresMenu extends Menu {
           console.log(`\n${resultado.mensagem}`);
         } else if (resultado.autor) {
           // Se encontrou, exibe todos os dados do autor
+          const data = formatarData(resultado.autor.data_nascimento);
           console.log(`\nID: ${resultado.autor.id}`);
           console.log(`Nome: ${resultado.autor.nome}`);
           console.log(`Nacionalidade: ${resultado.autor.nacionalidade ?? "-"}`);
-          console.log(`Data de nascimento: ${resultado.autor.data_nascimento ?? "-"}`);
+          console.log(`Data de nascimento: ${data}`);
         } else {
           // Se não encontrou, exibe mensagem
           console.log(`\n${resultado.mensagem}`);
