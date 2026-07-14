@@ -80,6 +80,33 @@ O fluxo é idêntico para qualquer entidade. O que muda:
 
 Nenhum SQL é repetido — as classes genéricas servem a todas as entidades.
 
+## Funcionalidades — Autores
+
+### Cadastrar autor
+- Coleta nome, nacionalidade e data de nascimento
+- Valida: nome obrigatório, data no formato `AAAA-MM-DD`, nome único (sem duplicidade)
+- Retorna o ID do autor cadastrado
+
+### Listar autores
+- Exibe todos os autores com ID, nome, nacionalidade e data de nascimento
+- Se não houver autores: `"Nenhum autor cadastrado."`
+
+### Consultar autor por ID
+- Solicita o ID e exibe todos os dados do autor
+- Se ID não existir: `"Autor não encontrado."`
+- Se ID inválido (zero/negativo): `"ID inválido."`
+
+### Atualizar autor
+- Solicita o ID, exibe os dados atuais e permite alterar cada campo
+- Deixar em branco mantém o valor atual
+- Validações: nome obrigatório, data no formato `AAAA-MM-DD`, nome único (excluindo o próprio ID)
+- Se ID não existir: `"Autor não encontrado."`
+
+### Remover autor
+- Solicita o ID e remove o autor
+- Se ID não existir: `"Autor não encontrado."`
+- Se ID inválido: `"ID inválido."`
+
 ## Banco de Dados
 
 PostgreSQL com as tabelas:
