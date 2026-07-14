@@ -107,6 +107,34 @@ Nenhum SQL é repetido — as classes genéricas servem a todas as entidades.
 - Se ID não existir: `"Autor não encontrado."`
 - Se ID inválido: `"ID inválido."`
 
+## Funcionalidades — Clientes
+
+### Cadastrar cliente
+- Coleta nome, email, telefone e endereço
+- Valida: nome obrigatório, email obrigatório + formato válido, email único (sem duplicidade)
+- Email é convertido para minúsculas antes de salvar
+- Retorna o ID do cliente cadastrado
+
+### Listar clientes
+- Exibe todos os clientes com ID, nome, email, telefone e endereço
+- Se não houver clientes: `"Nenhum cliente cadastrado."`
+
+### Consultar cliente por ID
+- Solicita o ID e exibe todos os dados do cliente
+- Se ID não existir: `"Cliente não encontrado."`
+- Se ID inválido (zero/negativo): `"ID inválido."`
+
+### Atualizar cliente
+- Solicita o ID, exibe os dados atuais e permite alterar cada campo
+- Deixar em branco mantém o valor atual
+- Validações: nome obrigatório, email obrigatório + formato válido, email único (excluindo o próprio ID)
+- Se ID não existir: `"Cliente não encontrado."`
+
+### Remover cliente
+- Solicita o ID e remove o cliente
+- Se ID não existir: `"Cliente não encontrado."`
+- Se ID inválido: `"ID inválido."`
+
 ## Banco de Dados
 
 PostgreSQL com as tabelas:
