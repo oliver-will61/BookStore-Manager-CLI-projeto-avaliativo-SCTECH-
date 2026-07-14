@@ -135,6 +135,36 @@ Nenhum SQL é repetido — as classes genéricas servem a todas as entidades.
 - Se ID não existir: `"Cliente não encontrado."`
 - Se ID inválido: `"ID inválido."`
 
+## Funcionalidades — Livros
+
+### Cadastrar livro
+- Coleta título, ano de publicação, gênero e ID do autor
+- Exibe lista de autores disponíveis antes de solicitar o ID do autor
+- Valida: título obrigatório, ano com 4 dígitos, título único (sem duplicidade), **autor deve existir no banco**
+- Se não houver autores cadastrados: `"Nenhum autor cadastrado. Cadastre um autor primeiro."`
+- Se autor não existir: `"Autor não encontrado. Cadastre o autor antes de vincular um livro."`
+- Retorna o ID do livro cadastrado
+
+### Listar livros
+- Exibe todos os livros com ID, título, ano, gênero e ID do autor
+- Se não houver livros: `"Nenhum livro cadastrado."`
+
+### Consultar livro por ID
+- Solicita o ID e exibe todos os dados do livro
+- Se ID não existir: `"Livro não encontrado."`
+- Se ID inválido (zero/negativo): `"ID inválido."`
+
+### Atualizar livro
+- Solicita o ID, exibe os dados atuais e permite alterar cada campo
+- Deixar em branco mantém o valor atual
+- Validações: título obrigatório, ano com 4 dígitos, título único (excluindo o próprio ID), autor deve existir
+- Se ID não existir: `"Livro não encontrado."`
+
+### Remover livro
+- Solicita o ID e remove o livro
+- Se ID não existir: `"Livro não encontrado."`
+- Se ID inválido: `"ID inválido."`
+
 ## Banco de Dados
 
 PostgreSQL com as tabelas:
