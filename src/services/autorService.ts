@@ -1,5 +1,5 @@
 // Importa as funções do repository para cadastrar e buscar autor
-import { repositoryCadastraAutor, repositoryBuscarPorNome, repositoryListarAutores, repositoryBuscarPorId } from "../repositories/autorRepository";
+import { repositoryCadastraAutor, repositoryBuscarPorNome, repositoryListarAutores, repositoryBuscarPorId, repositoryAtualizarAutor } from "../repositories/autorRepository";
 
 import {AutorRow} from "../models/interfaces/AutorInterface"
 
@@ -65,4 +65,57 @@ export async function ServiceConsultarAutor(
 
   // Busca o autor pelo ID no banco
   return await repositoryBuscarPorId(id);
+}
+
+// Função que contém as regras de negócio para atualizar um autor
+export async function ServiceAtualizarAutor(
+  id: number,
+  nome: string,
+  nacionalidade: string,
+  dataNascimento: string
+): Promise<AutorRow> {
+  // Valida se o ID é um número positivo
+  if (!id || id <= 0) {
+    throw new Error("ID inválido.");
+  }
+
+  // Verifica se o autor existe antes de atualizar
+  const autorAtual = await repositoryBuscarPorId(id);
+  if (!autorAtual) {
+    throw new Error("Autor não encontrado.");
+  }
+
+  // Valida se o nome foi preenchido
+  if (!nome || nome.trim().length === 0) {
+    throw new Error("Nome é obrigatório.");
+  }
+
+  const nomeTratado = nome.trim();
+  const nacionalidadeTratada = nacionalidade?.trim() || null;
+  const dataTratada = dataNascimento?.trim() || null;
+
+  // Valida o formato da data
+  if (dataTratada && !/^\d{4}-\d{2}-\d{2}$/.test(dataTratada)) {
+    throw new Error("Data deve estar no formato AAAA-MM-DD.");
+  }
+
+  // Verifica se já existe outro autor com o mesmo nome (excluindo o próprio)
+  const autorExistente = await repositoryBuscarPorNome(nomeTratado);
+  if (autorExistente && autorExistente.id !== id) {
+    throw new Error("Já existe outro autor cadastrado com este nome.");
+  }
+
+  // Chama o repository para atualizar os dados
+  const autorAtualizado = await repositoryAtualizarAutor(
+    id,
+    nomeTratado,
+    nacionalidadeTratada,
+    dataTratada
+  );
+
+  if (!autorAtualizado) {
+    throw new Error("Erro ao atualizar autor.");
+  }
+
+  return autorAtualizado;
 }

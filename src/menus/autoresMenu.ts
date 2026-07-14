@@ -1,5 +1,5 @@
 import { Menu } from "./menu";
-import { controllerCadastraAutor, controllerListarAutores, controllerConsultarAutor } from "../controllers/autorController";
+import { controllerCadastraAutor, controllerListarAutores, controllerConsultarAutor, controllerAtualizarAutor } from "../controllers/autorController";
 import { formatarData } from "../utils/formatDate";
 
 export class AutoresMenu extends Menu {
@@ -87,7 +87,46 @@ export class AutoresMenu extends Menu {
     {
       label: "Atualizar autores",
       handler: async () => {
-        console.log("\nFuncionalidade: Atualizar autores.\n");
+        console.log("\n=== Atualizar Autor ===\n");
+
+        const id = await this.question("ID do autor: ");
+
+        // Busca o autor atual para exibir os dados
+        const consulta = await controllerConsultarAutor(Number(id));
+
+        if (!consulta.sucesso || !consulta.autor) {
+          console.log(`\n${consulta.mensagem}`);
+          await this.question("Pressione Enter para voltar...");
+          return;
+        }
+
+        const autor = consulta.autor;
+        const dataNascimentoFormatada = formatarData(autor.data_nascimento);
+
+        // Exibe os dados atuais e solicita novos valores
+        console.log("\nDeixe em branco para manter o valor atual.");
+
+        console.log(`Nome (${autor.nome}):`);
+        const nome = await this.question("");
+
+        console.log(`Nacionalidade (${autor.nacionalidade ?? "-"}):`);
+        const nacionalidade = await this.question("");
+
+        console.log(`Data de nascimento (${dataNascimentoFormatada}) (AAAA-MM-DD):`);
+        const dataNascimento = await this.question("");
+
+        // dataFallback converte "-" para "" (vazio), e o service trata "" como null.
+        const dataFallback = dataNascimentoFormatada !== "-" ? dataNascimentoFormatada : ""; // Se dataNascimentoFormatada for válida usa como fallback, senão envia vazio
+        
+        const resultado = await controllerAtualizarAutor(
+          Number(id), // ID do autor a ser atualizado
+          nome || autor.nome, // Se nome foi preenchido usa o novo, senão mantém o atual
+          nacionalidade || (autor.nacionalidade ?? ""), // Se nacionalidade foi preenchida usa a nova, senão mantém a atual
+          dataNascimento || dataFallback // Se data foi preenchida usa a nova, senão mantém a atual
+        );
+
+        console.log(`\n${resultado.mensagem}`);
+
         await this.question("Pressione Enter para voltar...");
       },
     },

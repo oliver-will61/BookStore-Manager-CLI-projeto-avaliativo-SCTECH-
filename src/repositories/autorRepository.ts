@@ -23,6 +23,20 @@ export async function repositoryListarAutores(): Promise<AutorRow[]> {
   return (await BaseRepository.findAll("autores")) as unknown as AutorRow[];
 }
 
+// Função responsável por atualizar um autor no banco
+export async function repositoryAtualizarAutor(
+  id: number,
+  nome: string,
+  nacionalidade: string | null,
+  dataNascimento: string | null
+): Promise<AutorRow | null> {
+  return (await BaseRepository.update("autores", id, {
+    nome,
+    nacionalidade,
+    data_nascimento: dataNascimento,
+  })) as unknown as AutorRow | null;
+}
+
 // Função responsável por inserir um autor no banco, chamada pelo service
 export async function repositoryCadastraAutor(
   nome: string, //nome tratado

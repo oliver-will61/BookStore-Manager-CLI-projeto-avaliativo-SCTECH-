@@ -1,5 +1,5 @@
 // Importa os services que contém as regras de negócio para cadastrar e listar autores
-import { ServiceCadastraAutor, ServiceListarAutores, ServiceConsultarAutor } from "../services/autorService";
+import { ServiceCadastraAutor, ServiceListarAutores, ServiceConsultarAutor, ServiceAtualizarAutor } from "../services/autorService";
 // Importa a interface AutorRow para tipar o retorno opcional
 import {AutorRow} from "../models/interfaces/AutorInterface"
 
@@ -92,6 +92,29 @@ export async function controllerConsultarAutor(
       error instanceof Error
         ? error.message
         : "Erro inesperado ao consultar autor.";
+    return { sucesso: false, mensagem };
+  }
+}
+
+// Função que orquestra a atualização de um autor, chamada pelo menu
+export async function controllerAtualizarAutor(
+  id: number,
+  nome: string,
+  nacionalidade: string,
+  dataNascimento: string
+): Promise<{ sucesso: boolean; mensagem: string; autor?: AutorRow }> {
+  try {
+    const autor = await ServiceAtualizarAutor(id, nome, nacionalidade, dataNascimento);
+    return {
+      sucesso: true,
+      mensagem: `Autor atualizado com sucesso! ID: ${autor.id}`,
+      autor,
+    };
+  } catch (error) {
+    const mensagem =
+      error instanceof Error
+        ? error.message
+        : "Erro inesperado ao atualizar autor.";
     return { sucesso: false, mensagem };
   }
 }
