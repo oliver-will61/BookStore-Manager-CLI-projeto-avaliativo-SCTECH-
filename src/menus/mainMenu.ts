@@ -1,5 +1,6 @@
 import { Menu } from "./menu";
 import { AutoresMenu } from "./autoresMenu";
+import { ClientesMenu } from "./clientesMenu";
 
 export class MainMenu extends Menu {
   protected title = "BookStore Manager CLI";
@@ -21,8 +22,7 @@ export class MainMenu extends Menu {
     {
       label: "Clientes",
       handler: async () => {
-        console.log("\nFuncionalidade: Clientes.\n");
-        await this.question("Pressione Enter para voltar...");
+        await new ClientesMenu().start();
       },
     },
     {
