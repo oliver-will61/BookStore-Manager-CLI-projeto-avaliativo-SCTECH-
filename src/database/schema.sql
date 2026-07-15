@@ -11,7 +11,7 @@ CREATE TABLE livros (
   ano_publicacao INTEGER,
   genero VARCHAR(100),
   autor_id INTEGER NOT NULL,
-  quantidade INTEGER NOT NULL DEFAULT 1 
+  quantidade INTEGER NOT NULL DEFAULT 1,
   CONSTRAINT fk_livros_autor FOREIGN KEY (autor_id) REFERENCES autores(id) ON DELETE CASCADE
 );
 
@@ -27,7 +27,7 @@ CREATE TABLE emprestimos (
   id SERIAL PRIMARY KEY,
   cliente_id INTEGER NOT NULL,
   livro_id INTEGER NOT NULL,
-  data_emprestimo DATE NOT NULL DEFAULT,
+  data_emprestimo DATE NOT NULL DEFAULT CURRENT_DATE,
   data_devolucao DATE,
   status VARCHAR(20) NOT NULL,
   CONSTRAINT fk_emprestimos_cliente FOREIGN KEY (cliente_id) REFERENCES clientes(id) ON DELETE CASCADE,
@@ -47,14 +47,14 @@ INSERT INTO autores (nome, nacionalidade, data_nascimento) VALUES
   ('Graciliano Ramos',       'Brasileira',         '1892-10-27'),
   ('Cecília Meireles',       'Brasileira',         '1901-11-07');
 
-INSERT INTO livros (titulo, ano_publicacao, genero, autor_id) VALUES
-  ('Dom Casmurro',              1899, 'Romance',  1),
-  ('Memórias Póstumas de Brás Cubas', 1881, 'Romance', 1),
-  ('A Hora da Estrela',         1977, 'Romance', 2),
-  ('Grande Sertão: Veredas',    1956, 'Romance', 3),
-  ('Vidas Secas',               1938, 'Romance', 6),
-  ('Capitães da Areia',         1937, 'Romance', 5),
-  ('O Quinze',                  1930, 'Romance', 6);
+INSERT INTO livros (titulo, ano_publicacao, genero, autor_id, quantidade) VALUES
+  ('Dom Casmurro',              1899, 'Romance',  1, 5),
+  ('Memórias Póstumas de Brás Cubas', 1881, 'Romance', 1, 3),
+  ('A Hora da Estrela',         1977, 'Romance', 2, 4),
+  ('Grande Sertão: Veredas',    1956, 'Romance', 3, 2),
+  ('Vidas Secas',               1938, 'Romance', 6, 5),
+  ('Capitães da Areia',         1937, 'Romance', 5, 3),
+  ('O Quinze',                  1930, 'Romance', 6, 2);
 
 INSERT INTO clientes (nome, email, telefone, endereco) VALUES
   ('João Silva',      'joao.silva@email.com',    '11999990001', 'Rua A, 123, São Paulo-SP'),

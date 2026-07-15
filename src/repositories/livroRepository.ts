@@ -28,13 +28,15 @@ export async function repositoryAtualizarLivro(
   titulo: string,
   ano_publicacao: number | null,
   genero: string | null,
-  autor_id: number
+  autor_id: number,
+  quantidade: number
 ): Promise<LivroRow | null> {
   return (await BaseRepository.update("livros", id, {
     titulo,
     ano_publicacao,
     genero,
     autor_id,
+    quantidade,
   })) as unknown as LivroRow | null;
 }
 
@@ -42,12 +44,14 @@ export async function repositoryCadastraLivro(
   titulo: string,
   ano_publicacao: number | null,
   genero: string | null,
-  autor_id: number
+  autor_id: number,
+  quantidade: number
 ): Promise<LivroRow> {
   return (await BaseRepository.insert("livros", {
     titulo,
     ano_publicacao,
     genero,
     autor_id,
+    quantidade,
   })) as unknown as LivroRow;
 }

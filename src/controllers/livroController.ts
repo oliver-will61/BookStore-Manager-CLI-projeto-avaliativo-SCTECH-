@@ -5,10 +5,11 @@ export async function controllerCadastraLivro(
   titulo: string,
   ano_publicacao: string,
   genero: string,
-  autor_id: number
+  autor_id: number,
+  quantidade: string
 ): Promise<{ sucesso: boolean; mensagem: string; livro?: LivroRow }> {
   try {
-    const livro = await ServiceCadastraLivro(titulo, ano_publicacao, genero, autor_id);
+    const livro = await ServiceCadastraLivro(titulo, ano_publicacao, genero, autor_id, quantidade);
     return {
       sucesso: true,
       mensagem: `Livro cadastrado com sucesso! ID: ${livro.id}`,
@@ -85,10 +86,11 @@ export async function controllerAtualizarLivro(
   titulo: string,
   ano_publicacao: string,
   genero: string,
-  autor_id: number
+  autor_id: number,
+  quantidade: string
 ): Promise<{ sucesso: boolean; mensagem: string; livro?: LivroRow }> {
   try {
-    const livro = await ServiceAtualizarLivro(id, titulo, ano_publicacao, genero, autor_id);
+    const livro = await ServiceAtualizarLivro(id, titulo, ano_publicacao, genero, autor_id, quantidade);
     return {
       sucesso: true,
       mensagem: `Livro atualizado com sucesso! ID: ${livro.id}`,

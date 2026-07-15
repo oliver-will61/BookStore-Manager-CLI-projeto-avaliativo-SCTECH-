@@ -22,8 +22,9 @@ export class LivrosMenu extends Menu {
         const titulo = await this.question("Título: ");
         const anoPublicacao = await this.question("Ano de publicação: ");
         const genero = await this.question("Gênero: ");
+        const quantidade = await this.question("Quantidade de exemplares: ");
 
-        const resultado = await controllerCadastraLivro(titulo, anoPublicacao, genero, Number(autorId));
+        const resultado = await controllerCadastraLivro(titulo, anoPublicacao, genero, Number(autorId), quantidade);
         console.log(`\n${resultado.mensagem}`);
 
         await this.question("Pressione Enter para voltar...");
@@ -41,7 +42,7 @@ export class LivrosMenu extends Menu {
         } else if (resultado.livros && resultado.livros.length > 0) {
           for (const livro of resultado.livros) {
             console.log(
-              `ID: ${livro.id} | Título: ${livro.titulo} | Ano: ${livro.ano_publicacao ?? "-"} | Gênero: ${livro.genero ?? "-"} | Autor ID: ${livro.autor_id}`
+              `ID: ${livro.id} | Título: ${livro.titulo} | Ano: ${livro.ano_publicacao ?? "-"} | Gênero: ${livro.genero ?? "-"} | Exemplares: ${livro.quantidade} | Autor ID: ${livro.autor_id}`
             );
           }
           console.log(`\n${resultado.mensagem}`);
@@ -68,6 +69,7 @@ export class LivrosMenu extends Menu {
           console.log(`Título: ${resultado.livro.titulo}`);
           console.log(`Ano de publicação: ${resultado.livro.ano_publicacao ?? "-"}`);
           console.log(`Gênero: ${resultado.livro.genero ?? "-"}`);
+          console.log(`Exemplares: ${resultado.livro.quantidade}`);
           console.log(`Autor ID: ${resultado.livro.autor_id}`);
         } else {
           console.log(`\n${resultado.mensagem}`);
@@ -104,6 +106,9 @@ export class LivrosMenu extends Menu {
         console.log(`Gênero (${livro.genero ?? "-"}):`);
         const genero = await this.question("");
 
+        console.log(`Exemplares (${livro.quantidade}):`);
+        const quantidade = await this.question("");
+
         console.log(`Autor ID (${livro.autor_id}):`);
         const autorId = await this.question("");
 
@@ -112,7 +117,8 @@ export class LivrosMenu extends Menu {
           titulo || livro.titulo,
           anoPublicacao || (livro.ano_publicacao !== null ? String(livro.ano_publicacao) : ""),
           genero || (livro.genero ?? ""),
-          autorId ? Number(autorId) : livro.autor_id
+          autorId ? Number(autorId) : livro.autor_id,
+          quantidade || String(livro.quantidade)
         );
 
         console.log(`\n${resultado.mensagem}`);

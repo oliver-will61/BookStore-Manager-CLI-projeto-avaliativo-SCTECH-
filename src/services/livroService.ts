@@ -7,7 +7,8 @@ export async function ServiceCadastraLivro(
   titulo: string,
   ano_publicacao: string,
   genero: string,
-  autor_id: number
+  autor_id: number,
+  quantidade: string
 ): Promise<LivroRow> {
   if (!titulo || titulo.trim().length === 0) {
     throw new Error("Título é obrigatório.");
@@ -30,6 +31,12 @@ export async function ServiceCadastraLivro(
     throw new Error("Ano de publicação deve ter 4 dígitos.");
   }
 
+  const quantidadeTratada = quantidade?.trim() || null;
+  const qtd = Number(quantidadeTratada);
+  if (!qtd || qtd < 1 || !Number.isInteger(qtd)) {
+    throw new Error("Quantidade deve ser um número inteiro positivo.");
+  }
+
   const livroExistente = await repositoryBuscarPorTitulo(tituloTratado);
 
   if (livroExistente) {
@@ -40,7 +47,8 @@ export async function ServiceCadastraLivro(
     tituloTratado,
     anoTradado ? Number(anoTradado) : null,
     generoTratado,
-    autor_id
+    autor_id,
+    qtd
   );
 }
 
@@ -71,7 +79,8 @@ export async function ServiceAtualizarLivro(
   titulo: string,
   ano_publicacao: string,
   genero: string,
-  autor_id: number
+  autor_id: number,
+  quantidade: string
 ): Promise<LivroRow> {
   if (!id || id <= 0) {
     throw new Error("ID inválido.");
@@ -103,6 +112,12 @@ export async function ServiceAtualizarLivro(
     throw new Error("Ano de publicação deve ter 4 dígitos.");
   }
 
+  const quantidadeTratada = quantidade?.trim() || null;
+  const qtd = Number(quantidadeTratada);
+  if (!qtd || qtd < 1 || !Number.isInteger(qtd)) {
+    throw new Error("Quantidade deve ser um número inteiro positivo.");
+  }
+
   const livroExistente = await repositoryBuscarPorTitulo(tituloTratado);
   if (livroExistente && livroExistente.id !== id) {
     throw new Error("Já existe outro livro cadastrado com este título.");
@@ -113,7 +128,8 @@ export async function ServiceAtualizarLivro(
     tituloTratado,
     anoTradado ? Number(anoTradado) : null,
     generoTratado,
-    autor_id
+    autor_id,
+    qtd
   );
 
   if (!livroAtualizado) {
