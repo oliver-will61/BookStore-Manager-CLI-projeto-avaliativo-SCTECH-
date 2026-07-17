@@ -39,7 +39,10 @@ export async function ServiceCadastraEmprestimo(
     throw new Error(`Livro "${livro.titulo}" não possui exemplares disponíveis no momento.`);
   }
 
-  return await repositoryCadastraEmprestimo(cliente_id, livro_id, "emprestado");
+  const hoje = new Date().toISOString().split("T")[0];
+  const dataDevolucao = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split("T")[0]; // 7 dias em ms: 7 * 24h * 60min * 60s * 1000ms
+
+  return await repositoryCadastraEmprestimo(cliente_id, livro_id, "emprestado", hoje, dataDevolucao);
 }
 
 export async function ServiceListarEmprestimos(): Promise<{

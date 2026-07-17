@@ -5,12 +5,16 @@ import { EmprestimoRow, EmprestimoCompletoRow } from "../models/interfaces/Empre
 export async function repositoryCadastraEmprestimo(
   cliente_id: number,
   livro_id: number,
-  status: string
+  status: string,
+  data_emprestimo: string,
+  data_devolucao: string
 ): Promise<EmprestimoRow> {
   return (await BaseRepository.insert("emprestimos", {
     cliente_id,
     livro_id,
     status,
+    data_emprestimo,
+    data_devolucao,
   })) as unknown as EmprestimoRow;
 }
 
