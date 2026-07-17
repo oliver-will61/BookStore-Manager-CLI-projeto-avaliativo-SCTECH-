@@ -5,7 +5,7 @@ import {
   controllerConsultarEmprestimo,
   controllerDevolverLivro,
 } from "../controllers/emprestimoController";
-import { controllerListarClientes } from "../controllers/clienteController";
+import { controllerListarClientes, controllerConsultarCliente } from "../controllers/clienteController";
 import { controllerListarLivrosComDisponivel } from "../controllers/emprestimoController";
 import { formatarData } from "../utils/formatDate";
 
@@ -31,6 +31,13 @@ export class EmprestimosMenu extends Menu {
         }
 
         const clienteId = await this.question("\nID do cliente: ");
+
+        const validacao = await controllerConsultarCliente(Number(clienteId));
+        if (!validacao.sucesso || !validacao.cliente) {
+          console.log(`\n${validacao.mensagem}`);
+          await this.question("Pressione Enter para voltar...");
+          return;
+        }
 
         const livros = await controllerListarLivrosComDisponivel();
         if (!livros.sucesso || !livros.livros || livros.livros.length === 0) {
