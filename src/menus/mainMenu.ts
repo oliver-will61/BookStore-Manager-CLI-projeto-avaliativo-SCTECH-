@@ -2,6 +2,7 @@ import { Menu } from "./menu";
 import { AutoresMenu } from "./autoresMenu";
 import { ClientesMenu } from "./clientesMenu";
 import { LivrosMenu } from "./livrosMenu";
+import { EmprestimosMenu } from "./emprestimosMenu";
 
 export class MainMenu extends Menu {
   protected title = "BookStore Manager CLI";
@@ -28,8 +29,7 @@ export class MainMenu extends Menu {
     {
       label: "Empréstimos",
       handler: async () => {
-        console.log("\nFuncionalidade: Empréstimos.\n");
-        await this.question("Pressione Enter para voltar...");
+        await new EmprestimosMenu().start();
       },
     },
     {

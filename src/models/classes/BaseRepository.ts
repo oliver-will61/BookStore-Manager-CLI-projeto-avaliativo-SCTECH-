@@ -99,6 +99,38 @@ export class BaseRepository {
     return result.rows[0] || null; // Retorna o registro atualizado ou null
   }
 
+  // Conta quantos registros existem em uma tabela filtrando por uma coluna
+  static async countBy(
+    tabela: string,
+    coluna: string,
+    valor: unknown
+  ): Promise<number> {
+    validarTabela(tabela);
+
+    const result = await pool.query(
+      `SELECT COUNT(*)::int AS total FROM ${tabela} WHERE ${coluna} = $1`,
+      [valor]
+    );
+
+    return result.rows[0].total;
+  }
+
+  // Conta quantos registros existem filtrando por duas colunas (AND)
+  static async countByTwo(
+    tabela: string,
+    coluna1: string, valor1: unknown,
+    coluna2: string, valor2: unknown
+  ): Promise<number> {
+    validarTabela(tabela);
+
+    const result = await pool.query(
+      `SELECT COUNT(*)::int AS total FROM ${tabela} WHERE ${coluna1} = $1 AND ${coluna2} = $2`,
+      [valor1, valor2]
+    );
+
+    return result.rows[0].total;
+  }
+
   // Remove um registro pelo ID e retorna true se foi removido, false caso contrário
   static async delete(
     tabela: string, // Nome da tabela
