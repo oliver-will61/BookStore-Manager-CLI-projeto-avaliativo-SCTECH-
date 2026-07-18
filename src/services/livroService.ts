@@ -2,6 +2,7 @@ import { repositoryCadastraLivro, repositoryBuscarPorTitulo, repositoryListarLiv
 import { repositoryBuscarPorId as repositoryBuscarAutorPorId } from "../repositories/autorRepository";
 
 import { Livro } from "../models/classes/Livro";
+import { validarId } from "../utils/validators";
 
 export async function ServiceCadastraLivro(
   titulo: string,
@@ -14,9 +15,7 @@ export async function ServiceCadastraLivro(
     throw new Error("Título é obrigatório.");
   }
 
-  if (!autor_id || autor_id <= 0) {
-    throw new Error("ID do autor inválido.");
-  }
+  validarId(autor_id, "ID do autor");
 
   const autorExistente = await repositoryBuscarAutorPorId(autor_id);
   if (!autorExistente) {
@@ -25,9 +24,9 @@ export async function ServiceCadastraLivro(
 
   const tituloTratado = titulo.trim();
   const generoTratado = genero?.trim() || null;
-  const anoTradado = ano_publicacao?.trim() || null;
+  const anoTratado = ano_publicacao?.trim() || null;
 
-  if (anoTradado && !/^\d{4}$/.test(anoTradado)) {
+  if (anoTratado && !/^\d{4}$/.test(anoTratado)) {
     throw new Error("Ano de publicação deve ter 4 dígitos.");
   }
 
@@ -43,7 +42,7 @@ export async function ServiceCadastraLivro(
     throw new Error("Já existe um livro cadastrado com este título.");
   }
 
-  const row = await repositoryCadastraLivro(tituloTratado, anoTradado ? Number(anoTradado) : null, generoTratado, autor_id, qtd);
+  const row = await repositoryCadastraLivro(tituloTratado, anoTratado ? Number(anoTratado) : null, generoTratado, autor_id, qtd);
   return new Livro(row.id, row.titulo, row.ano_publicacao, row.genero, row.autor_id, row.quantidade);
 }
 
@@ -62,9 +61,7 @@ export async function ServiceListarLivros(): Promise<{
 export async function ServiceConsultarLivro(
   id: number
 ): Promise<Livro | null> {
-  if (!id || id <= 0) {
-    throw new Error("ID inválido.");
-  }
+  validarId(id);
 
   const row = await repositoryBuscarPorId(id);
   return row ? new Livro(row.id, row.titulo, row.ano_publicacao, row.genero, row.autor_id, row.quantidade) : null;
@@ -78,9 +75,7 @@ export async function ServiceAtualizarLivro(
   autor_id: number,
   quantidade: string
 ): Promise<Livro> {
-  if (!id || id <= 0) {
-    throw new Error("ID inválido.");
-  }
+  validarId(id);
 
   const livroAtual = await repositoryBuscarPorId(id);
   if (!livroAtual) {
@@ -91,9 +86,7 @@ export async function ServiceAtualizarLivro(
     throw new Error("Título é obrigatório.");
   }
 
-  if (!autor_id || autor_id <= 0) {
-    throw new Error("ID do autor inválido.");
-  }
+  validarId(autor_id, "ID do autor");
 
   const autorExistente = await repositoryBuscarAutorPorId(autor_id);
   if (!autorExistente) {
@@ -102,9 +95,9 @@ export async function ServiceAtualizarLivro(
 
   const tituloTratado = titulo.trim();
   const generoTratado = genero?.trim() || null;
-  const anoTradado = ano_publicacao?.trim() || null;
+  const anoTratado = ano_publicacao?.trim() || null;
 
-  if (anoTradado && !/^\d{4}$/.test(anoTradado)) {
+  if (anoTratado && !/^\d{4}$/.test(anoTratado)) {
     throw new Error("Ano de publicação deve ter 4 dígitos.");
   }
 
@@ -119,7 +112,7 @@ export async function ServiceAtualizarLivro(
     throw new Error("Já existe outro livro cadastrado com este título.");
   }
 
-  const row = await repositoryAtualizarLivro(id, tituloTratado, anoTradado ? Number(anoTradado) : null, generoTratado, autor_id, qtd);
+  const row = await repositoryAtualizarLivro(id, tituloTratado, anoTratado ? Number(anoTratado) : null, generoTratado, autor_id, qtd);
 
   if (!row) {
     throw new Error("Erro ao atualizar livro.");
@@ -131,9 +124,7 @@ export async function ServiceAtualizarLivro(
 export async function ServiceRemoverLivro(
   id: number
 ): Promise<void> {
-  if (!id || id <= 0) {
-    throw new Error("ID inválido.");
-  }
+  validarId(id);
 
   const livro = await repositoryBuscarPorId(id);
   if (!livro) {

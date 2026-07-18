@@ -1,6 +1,7 @@
 import { repositoryCadastraCliente, repositoryBuscarPorEmail, repositoryListarClientes, repositoryBuscarPorId, repositoryAtualizarCliente, repositoryRemoverCliente } from "../repositories/clienteRepository";
 
 import { Cliente } from "../models/classes/Cliente";
+import { validarId } from "../utils/validators";
 
 export async function ServiceCadastraCliente(
   nome: string,
@@ -50,9 +51,7 @@ export async function ServiceListarClientes(): Promise<{
 export async function ServiceConsultarCliente(
   id: number
 ): Promise<Cliente | null> {
-  if (!id || id <= 0) {
-    throw new Error("ID inválido.");
-  }
+  validarId(id);
 
   const row = await repositoryBuscarPorId(id);
   return row ? new Cliente(row.id, row.nome, row.email, row.telefone, row.endereco) : null;
@@ -65,9 +64,7 @@ export async function ServiceAtualizarCliente(
   telefone: string,
   endereco: string
 ): Promise<Cliente> {
-  if (!id || id <= 0) {
-    throw new Error("ID inválido.");
-  }
+  validarId(id);
 
   const clienteAtual = await repositoryBuscarPorId(id);
   if (!clienteAtual) {
@@ -109,9 +106,7 @@ export async function ServiceAtualizarCliente(
 export async function ServiceRemoverCliente(
   id: number
 ): Promise<void> {
-  if (!id || id <= 0) {
-    throw new Error("ID inválido.");
-  }
+  validarId(id);
 
   const cliente = await repositoryBuscarPorId(id);
   if (!cliente) {

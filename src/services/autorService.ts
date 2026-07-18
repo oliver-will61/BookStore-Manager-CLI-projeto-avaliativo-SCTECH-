@@ -2,6 +2,7 @@
 import { repositoryCadastraAutor, repositoryBuscarPorNome, repositoryListarAutores, repositoryBuscarPorId, repositoryAtualizarAutor, repositoryRemoverAutor } from "../repositories/autorRepository";
 
 import { Autor } from "../models/classes/Autor";
+import { validarId } from "../utils/validators";
 
 // Função que contém as regras de negócio para cadastrar um autor
 export async function ServiceCadastraAutor(
@@ -47,24 +48,19 @@ export async function ServiceListarAutores(): Promise<{
 export async function ServiceConsultarAutor(
   id: number // ID do autor a consultar
 ): Promise<Autor | null> {
-  if (!id || id <= 0) {
-    throw new Error("ID inválido.");
-  }
+  validarId(id);
 
   const row = await repositoryBuscarPorId(id);
   return row ? new Autor(row.id, row.nome, row.nacionalidade, row.data_nascimento) : null;
 }
 
-// Função que contém as regras de negócio para atualizar um autor
 export async function ServiceAtualizarAutor(
   id: number,
   nome: string,
   nacionalidade: string,
   dataNascimento: string
 ): Promise<Autor> {
-  if (!id || id <= 0) {
-    throw new Error("ID inválido.");
-  }
+  validarId(id);
 
   const autorAtual = await repositoryBuscarPorId(id);
   if (!autorAtual) {
@@ -102,11 +98,8 @@ export async function ServiceRemoverAutor(
   id: number // ID do autor a remover
 ): Promise<void> {
   // Valida se o ID é um número positivo
-  if (!id || id <= 0) {
-    throw new Error("ID inválido.");
-  }
+  validarId(id);
 
-  // Verifica se o autor existe antes de remover
   const autor = await repositoryBuscarPorId(id);
   if (!autor) {
     throw new Error("Autor não encontrado.");
