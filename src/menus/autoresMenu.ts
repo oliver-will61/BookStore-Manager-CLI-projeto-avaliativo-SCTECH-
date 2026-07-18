@@ -9,6 +9,7 @@ export class AutoresMenu extends Menu {
     {
       label: "Cadastrar autores",
       handler: async () => {
+        console.clear();
         console.log("\n=== Cadastrar Autor ===\n");
 
         //input nome
@@ -30,6 +31,7 @@ export class AutoresMenu extends Menu {
     {
       label: "Listar autores",
       handler: async () => {
+        console.clear();
         console.log("\n=== Listar Autores ===\n");
 
         // Chama o controller que busca todos os autores
@@ -58,6 +60,7 @@ export class AutoresMenu extends Menu {
     {
       label: "Consultar um autor por identificador",
       handler: async () => {
+        console.clear();
         console.log("\n=== Consultar Autor por ID ===\n");
 
         // Solicita o ID ao usuário
@@ -87,6 +90,7 @@ export class AutoresMenu extends Menu {
     {
       label: "Atualizar autores",
       handler: async () => {
+        console.clear();
         console.log("\n=== Atualizar Autor ===\n");
 
         const id = await this.question("ID do autor: ");
@@ -133,6 +137,7 @@ export class AutoresMenu extends Menu {
     {
       label: "Remover autores",
       handler: async () => {
+        console.clear();
         console.log("\n=== Remover Autor ===\n");
 
         const id = await this.question("ID do autor: ");

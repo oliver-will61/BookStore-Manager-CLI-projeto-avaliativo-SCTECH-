@@ -8,6 +8,7 @@ export class ClientesMenu extends Menu {
     {
       label: "Cadastrar clientes",
       handler: async () => {
+        console.clear();
         console.log("\n=== Cadastrar Cliente ===\n");
 
         const nome = await this.question("Nome: ");
@@ -24,6 +25,7 @@ export class ClientesMenu extends Menu {
     {
       label: "Listar clientes",
       handler: async () => {
+        console.clear();
         console.log("\n=== Listar Clientes ===\n");
 
         const resultado = await controllerListarClientes();
@@ -47,6 +49,7 @@ export class ClientesMenu extends Menu {
     {
       label: "Consultar um cliente por identificador",
       handler: async () => {
+        console.clear();
         console.log("\n=== Consultar Cliente por ID ===\n");
 
         const id = await this.question("ID do cliente: ");
@@ -71,6 +74,7 @@ export class ClientesMenu extends Menu {
     {
       label: "Atualizar clientes",
       handler: async () => {
+        console.clear();
         console.log("\n=== Atualizar Cliente ===\n");
 
         const id = await this.question("ID do cliente: ");
@@ -115,6 +119,7 @@ export class ClientesMenu extends Menu {
     {
       label: "Remover clientes",
       handler: async () => {
+        console.clear();
         console.log("\n=== Remover Cliente ===\n");
 
         const id = await this.question("ID do cliente: ");

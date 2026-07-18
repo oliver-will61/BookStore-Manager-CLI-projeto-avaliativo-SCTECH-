@@ -39,13 +39,15 @@ export abstract class Menu {
   async start(): Promise<void> {
     let running = true; // Controla a execução do loop
 
-    while (running) { 
+    while (running) {
+      console.clear();
       await this.showMenu(); // Exibe as opções
       const input = await this.question("Escolha uma opção: "); // Captura a escolha do usuário
       const index = parseInt(input.trim()) - 1; // Converte para índice base 0
 
       if (index >= 0 && index < this.options.length - 1) {
         // Se for uma opção válida (exceto a última), executa o handler correspondente
+        
         await this.options[index].handler();
       } else if (index === this.options.length - 1) {
         // Se for a última opção (Voltar / Encerrar), sai do loop

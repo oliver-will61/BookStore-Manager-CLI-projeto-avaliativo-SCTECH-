@@ -9,6 +9,7 @@ export class LivrosMenu extends Menu {
     {
       label: "Cadastrar livros",
       handler: async () => {
+        console.clear();
         console.log("\n=== Cadastrar Livro ===\n");
 
         const autores = await controllerListarAutores();
@@ -33,6 +34,7 @@ export class LivrosMenu extends Menu {
     {
       label: "Listar livros",
       handler: async () => {
+        console.clear();
         console.log("\n=== Listar Livros ===\n");
 
         const resultado = await controllerListarLivros();
@@ -56,6 +58,7 @@ export class LivrosMenu extends Menu {
     {
       label: "Consultar um livro por identificador",
       handler: async () => {
+        console.clear();
         console.log("\n=== Consultar Livro por ID ===\n");
 
         const id = await this.question("ID do livro: ");
@@ -81,6 +84,7 @@ export class LivrosMenu extends Menu {
     {
       label: "Atualizar livros",
       handler: async () => {
+        console.clear();
         console.log("\n=== Atualizar Livro ===\n");
 
         const id = await this.question("ID do livro: ");
@@ -129,6 +133,7 @@ export class LivrosMenu extends Menu {
     {
       label: "Remover livros",
       handler: async () => {
+        console.clear();
         console.log("\n=== Remover Livro ===\n");
 
         const id = await this.question("ID do livro: ");

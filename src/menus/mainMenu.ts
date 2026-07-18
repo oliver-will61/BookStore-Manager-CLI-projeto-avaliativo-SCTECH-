@@ -12,30 +12,35 @@ export class MainMenu extends Menu {
     {
       label: "Autores",
       handler: async () => {
+        console.clear()
         await new AutoresMenu().start();
       },
     },
     {
       label: "Livros",
       handler: async () => {
+        console.clear()
         await new LivrosMenu().start();
       },
     },
     {
       label: "Clientes",
       handler: async () => {
+        console.clear()
         await new ClientesMenu().start();
       },
     },
     {
       label: "Empréstimos",
       handler: async () => {
+        console.clear()
         await new EmprestimosMenu().start();
       },
     },
     {
       label: "Relatórios",
       handler: async () => {
+        console.clear()
         await new RelatoriosMenu().start();
       },
     },

@@ -14,6 +14,7 @@ export class RelatoriosMenu extends Menu {
     {
       label: "Livros disponíveis",
       handler: async () => {
+        console.clear();
         console.log("\n=== Livros Disponíveis ===\n");
 
         const resultado = await controllerLivrosDisponiveis();
@@ -37,6 +38,7 @@ export class RelatoriosMenu extends Menu {
     {
       label: "Livros emprestados",
       handler: async () => {
+        console.clear();
         console.log("\n=== Livros Emprestados ===\n");
 
         const resultado = await controllerLivrosEmprestados();
@@ -60,6 +62,7 @@ export class RelatoriosMenu extends Menu {
     {
       label: "Livros cadastrados por autor",
       handler: async () => {
+        console.clear();
         console.log("\n=== Livros por Autor ===\n");
 
         const resultado = await controllerLivrosPorAutor();
@@ -83,6 +86,7 @@ export class RelatoriosMenu extends Menu {
     {
       label: "Quantidade de empréstimos por livro",
       handler: async () => {
+        console.clear();
         console.log("\n=== Empréstimos por Livro ===\n");
 
         const resultado = await controllerEmprestimosPorLivro();
@@ -106,6 +110,7 @@ export class RelatoriosMenu extends Menu {
     {
       label: "Clientes com empréstimos ativos",
       handler: async () => {
+        console.clear();
         console.log("\n=== Clientes com Empréstimos Ativos ===\n");
 
         const resultado = await controllerClientesComEmprestimosAtivos();

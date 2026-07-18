@@ -16,6 +16,7 @@ export class EmprestimosMenu extends Menu {
     {
       label: "Registrar empréstimo",
       handler: async () => {
+        console.clear();
         console.log("\n=== Registrar Empréstimo ===\n");
 
         const clientes = await controllerListarClientes();
@@ -62,6 +63,7 @@ export class EmprestimosMenu extends Menu {
     {
       label: "Listar empréstimos",
       handler: async () => {
+        console.clear();
         console.log("\n=== Listar Empréstimos ===\n");
 
         const resultado = await controllerListarEmprestimos();
@@ -87,6 +89,7 @@ export class EmprestimosMenu extends Menu {
     {
       label: "Consultar empréstimo por ID",
       handler: async () => {
+        console.clear();
         console.log("\n=== Consultar Empréstimo por ID ===\n");
 
         const id = await this.question("ID do empréstimo: ");
@@ -114,6 +117,7 @@ export class EmprestimosMenu extends Menu {
     {
       label: "Devolver livro",
       handler: async () => {
+        console.clear();
         console.log("\n=== Devolver Livro ===\n");
 
         const id = await this.question("ID do empréstimo: ");
