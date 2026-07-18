@@ -7,6 +7,7 @@ import {
 } from "../services/emprestimoService";
 import { Emprestimo } from "../models/classes/Emprestimo";
 import { EmprestimoCompletoRow } from "../models/interfaces/EmprestimoInterface";
+import { extrairMensagemErro } from "../utils/validators";
 
 export async function controllerCadastraEmprestimo(
   cliente_id: number,
@@ -20,10 +21,7 @@ export async function controllerCadastraEmprestimo(
       emprestimo,
     };
   } catch (error) {
-    const mensagem =
-      error instanceof Error
-        ? error.message
-        : "Erro inesperado ao registrar empréstimo.";
+    const mensagem = extrairMensagemErro(error, "Erro inesperado ao registrar empréstimo.");
     return { sucesso: false, mensagem };
   }
 }
@@ -50,10 +48,7 @@ export async function controllerListarEmprestimos(): Promise<{
       emprestimos,
     };
   } catch (error) {
-    const mensagem =
-      error instanceof Error
-        ? error.message
-        : "Erro inesperado ao listar empréstimos.";
+    const mensagem = extrairMensagemErro(error, "Erro inesperado ao listar empréstimos.");
     return { sucesso: false, mensagem };
   }
 }
@@ -77,10 +72,7 @@ export async function controllerConsultarEmprestimo(
       emprestimo,
     };
   } catch (error) {
-    const mensagem =
-      error instanceof Error
-        ? error.message
-        : "Erro inesperado ao consultar empréstimo.";
+    const mensagem = extrairMensagemErro(error, "Erro inesperado ao consultar empréstimo.");
     return { sucesso: false, mensagem };
   }
 }
@@ -107,10 +99,7 @@ export async function controllerListarLivrosComDisponivel(): Promise<{
       livros,
     };
   } catch (error) {
-    const mensagem =
-      error instanceof Error
-        ? error.message
-        : "Erro inesperado ao listar livros.";
+    const mensagem = extrairMensagemErro(error, "Erro inesperado ao listar livros.");
     return { sucesso: false, mensagem };
   }
 }
@@ -126,10 +115,7 @@ export async function controllerDevolverLivro(
       emprestimo,
     };
   } catch (error) {
-    const mensagem =
-      error instanceof Error
-        ? error.message
-        : "Erro inesperado ao registrar devolução.";
+    const mensagem = extrairMensagemErro(error, "Erro inesperado ao registrar devolução.");
     return { sucesso: false, mensagem };
   }
 }

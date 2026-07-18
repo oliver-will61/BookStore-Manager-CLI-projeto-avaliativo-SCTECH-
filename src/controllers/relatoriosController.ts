@@ -5,6 +5,7 @@ import {
   ServiceEmprestimosPorLivro,
   ServiceClientesComEmprestimosAtivos,
 } from "../services/relatoriosService";
+import { extrairMensagemErro } from "../utils/validators";
 
 export async function controllerLivrosDisponiveis() {
   try {
@@ -16,7 +17,7 @@ export async function controllerLivrosDisponiveis() {
 
     return { sucesso: true, mensagem: `${livros.length} livro(s) disponível(is).`, livros };
   } catch (error) {
-    const mensagem = error instanceof Error ? error.message : "Erro inesperado.";
+    const mensagem = extrairMensagemErro(error);
     return { sucesso: false, mensagem };
   }
 }
@@ -31,7 +32,7 @@ export async function controllerLivrosEmprestados() {
 
     return { sucesso: true, mensagem: `${livros.length} livro(s) com empréstimos ativos.`, livros };
   } catch (error) {
-    const mensagem = error instanceof Error ? error.message : "Erro inesperado.";
+    const mensagem = extrairMensagemErro(error);
     return { sucesso: false, mensagem };
   }
 }
@@ -46,7 +47,7 @@ export async function controllerLivrosPorAutor() {
 
     return { sucesso: true, mensagem: `${autores.length} autor(es) encontrado(s).`, autores };
   } catch (error) {
-    const mensagem = error instanceof Error ? error.message : "Erro inesperado.";
+    const mensagem = extrairMensagemErro(error);
     return { sucesso: false, mensagem };
   }
 }
@@ -61,7 +62,7 @@ export async function controllerEmprestimosPorLivro() {
 
     return { sucesso: true, mensagem: `${livros.length} livro(s) encontrado(s).`, livros };
   } catch (error) {
-    const mensagem = error instanceof Error ? error.message : "Erro inesperado.";
+    const mensagem = extrairMensagemErro(error);
     return { sucesso: false, mensagem };
   }
 }
@@ -76,7 +77,7 @@ export async function controllerClientesComEmprestimosAtivos() {
 
     return { sucesso: true, mensagem: `${clientes.length} cliente(s) com empréstimos ativos.`, clientes };
   } catch (error) {
-    const mensagem = error instanceof Error ? error.message : "Erro inesperado.";
+    const mensagem = extrairMensagemErro(error);
     return { sucesso: false, mensagem };
   }
 }

@@ -1,5 +1,6 @@
 import { ServiceCadastraLivro, ServiceListarLivros, ServiceConsultarLivro, ServiceAtualizarLivro, ServiceRemoverLivro } from "../services/livroService";
 import { Livro } from "../models/classes/Livro";
+import { extrairMensagemErro } from "../utils/validators";
 
 export async function controllerCadastraLivro(
   titulo: string,
@@ -16,10 +17,7 @@ export async function controllerCadastraLivro(
       livro,
     };
   } catch (error) {
-    const mensagem =
-      error instanceof Error
-        ? error.message
-        : "Erro inesperado ao cadastrar livro.";
+    const mensagem = extrairMensagemErro(error, "Erro inesperado ao cadastrar livro.");
     return { sucesso: false, mensagem };
   }
 }
@@ -46,10 +44,7 @@ export async function controllerListarLivros(): Promise<{
       livros,
     };
   } catch (error) {
-    const mensagem =
-      error instanceof Error
-        ? error.message
-        : "Erro inesperado ao listar livros.";
+    const mensagem = extrairMensagemErro(error, "Erro inesperado ao listar livros.");
     return { sucesso: false, mensagem };
   }
 }
@@ -73,10 +68,7 @@ export async function controllerConsultarLivro(
       livro,
     };
   } catch (error) {
-    const mensagem =
-      error instanceof Error
-        ? error.message
-        : "Erro inesperado ao consultar livro.";
+    const mensagem = extrairMensagemErro(error, "Erro inesperado ao consultar livro.");
     return { sucesso: false, mensagem };
   }
 }
@@ -97,10 +89,7 @@ export async function controllerAtualizarLivro(
       livro,
     };
   } catch (error) {
-    const mensagem =
-      error instanceof Error
-        ? error.message
-        : "Erro inesperado ao atualizar livro.";
+    const mensagem = extrairMensagemErro(error, "Erro inesperado ao atualizar livro.");
     return { sucesso: false, mensagem };
   }
 }
@@ -115,10 +104,7 @@ export async function controllerRemoverLivro(
       mensagem: "Livro removido com sucesso!",
     };
   } catch (error) {
-    const mensagem =
-      error instanceof Error
-        ? error.message
-        : "Erro inesperado ao remover livro.";
+    const mensagem = extrairMensagemErro(error, "Erro inesperado ao remover livro.");
     return { sucesso: false, mensagem };
   }
 }

@@ -1,5 +1,6 @@
 import { ServiceCadastraCliente, ServiceListarClientes, ServiceConsultarCliente, ServiceAtualizarCliente, ServiceRemoverCliente } from "../services/clienteService";
 import { Cliente } from "../models/classes/Cliente";
+import { extrairMensagemErro } from "../utils/validators";
 
 export async function controllerCadastraCliente(
   nome: string,
@@ -15,10 +16,7 @@ export async function controllerCadastraCliente(
       cliente,
     };
   } catch (error) {
-    const mensagem =
-      error instanceof Error
-        ? error.message
-        : "Erro inesperado ao cadastrar cliente.";
+    const mensagem = extrairMensagemErro(error, "Erro inesperado ao cadastrar cliente.");
     return { sucesso: false, mensagem };
   }
 }
@@ -45,10 +43,7 @@ export async function controllerListarClientes(): Promise<{
       clientes,
     };
   } catch (error) {
-    const mensagem =
-      error instanceof Error
-        ? error.message
-        : "Erro inesperado ao listar clientes.";
+    const mensagem = extrairMensagemErro(error, "Erro inesperado ao listar clientes.");
     return { sucesso: false, mensagem };
   }
 }
@@ -72,10 +67,7 @@ export async function controllerConsultarCliente(
       cliente,
     };
   } catch (error) {
-    const mensagem =
-      error instanceof Error
-        ? error.message
-        : "Erro inesperado ao consultar cliente.";
+    const mensagem = extrairMensagemErro(error, "Erro inesperado ao consultar cliente.");
     return { sucesso: false, mensagem };
   }
 }
@@ -95,10 +87,7 @@ export async function controllerAtualizarCliente(
       cliente,
     };
   } catch (error) {
-    const mensagem =
-      error instanceof Error
-        ? error.message
-        : "Erro inesperado ao atualizar cliente.";
+    const mensagem = extrairMensagemErro(error, "Erro inesperado ao atualizar cliente.");
     return { sucesso: false, mensagem };
   }
 }
@@ -113,10 +102,7 @@ export async function controllerRemoverCliente(
       mensagem: "Cliente removido com sucesso!",
     };
   } catch (error) {
-    const mensagem =
-      error instanceof Error
-        ? error.message
-        : "Erro inesperado ao remover cliente.";
+    const mensagem = extrairMensagemErro(error, "Erro inesperado ao remover cliente.");
     return { sucesso: false, mensagem };
   }
 }

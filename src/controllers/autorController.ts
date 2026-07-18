@@ -1,7 +1,7 @@
 // Importa os services que contém as regras de negócio para cadastrar e listar autores
 import { ServiceCadastraAutor, ServiceListarAutores, ServiceConsultarAutor, ServiceAtualizarAutor, ServiceRemoverAutor } from "../services/autorService";
 import { Autor } from "../models/classes/Autor";
-
+import { extrairMensagemErro } from "../utils/validators";
 
 // Função que orquestra o cadastro de um autor, chamada pelo menu
 export async function controllerCadastraAutor(
@@ -17,10 +17,7 @@ export async function controllerCadastraAutor(
       autor,
     };
   } catch (error) {
-    const mensagem =
-      error instanceof Error
-        ? error.message
-        : "Erro inesperado ao cadastrar autor.";
+    const mensagem = extrairMensagemErro(error, "Erro inesperado ao cadastrar autor.");
     return { sucesso: false, mensagem };
   }
 }
@@ -52,10 +49,7 @@ export async function controllerListarAutores(): Promise<{
       autores,
     };
   } catch (error) { // Captura qualquer erro lançado pelo service
-    const mensagem =
-      error instanceof Error
-        ? error.message
-        : "Erro inesperado ao listar autores.";
+    const mensagem = extrairMensagemErro(error, "Erro inesperado ao listar autores.");
     return { sucesso: false, mensagem };
   }
 }
@@ -82,10 +76,7 @@ export async function controllerConsultarAutor(
       autor,
     };
   } catch (error) { // Captura qualquer erro lançado pelo service (validação ou banco)
-    const mensagem =
-      error instanceof Error
-        ? error.message
-        : "Erro inesperado ao consultar autor.";
+    const mensagem = extrairMensagemErro(error, "Erro inesperado ao consultar autor.");
     return { sucesso: false, mensagem };
   }
 }
@@ -105,10 +96,7 @@ export async function controllerAtualizarAutor(
       autor,
     };
   } catch (error) {
-    const mensagem =
-      error instanceof Error
-        ? error.message
-        : "Erro inesperado ao atualizar autor.";
+    const mensagem = extrairMensagemErro(error, "Erro inesperado ao atualizar autor.");
     return { sucesso: false, mensagem };
   }
 }
@@ -124,10 +112,7 @@ export async function controllerRemoverAutor(
       mensagem: "Autor removido com sucesso!",
     };
   } catch (error) {
-    const mensagem =
-      error instanceof Error
-        ? error.message
-        : "Erro inesperado ao remover autor.";
+    const mensagem = extrairMensagemErro(error, "Erro inesperado ao remover autor.");
     return { sucesso: false, mensagem };
   }
 }
