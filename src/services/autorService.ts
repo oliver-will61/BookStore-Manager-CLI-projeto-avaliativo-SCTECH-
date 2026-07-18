@@ -28,7 +28,7 @@ export async function ServiceCadastraAutor(
   }
 
   const row = await repositoryCadastraAutor(nome.trim(), nacionalidadeTratada, dataTratada);
-  return new Autor(row.id, row.nome, row.nacionalidade, row.data_nascimento);
+  return Autor.fromRow(row);
 }
 
 // Função que contém as regras de negócio para listar autores
@@ -39,7 +39,7 @@ export async function ServiceListarAutores(): Promise<{
   const rows = await repositoryListarAutores();
 
   return {
-    autores: rows.map(row => new Autor(row.id, row.nome, row.nacionalidade, row.data_nascimento)),
+    autores: rows.map(row => Autor.fromRow(row)),
     vazio: rows.length === 0,
   };
 }
@@ -51,7 +51,7 @@ export async function ServiceConsultarAutor(
   validarId(id);
 
   const row = await repositoryBuscarPorId(id);
-  return row ? new Autor(row.id, row.nome, row.nacionalidade, row.data_nascimento) : null;
+  return row ? Autor.fromRow(row) : null;
 }
 
 export async function ServiceAtualizarAutor(
@@ -90,7 +90,7 @@ export async function ServiceAtualizarAutor(
     throw new Error("Erro ao atualizar autor.");
   }
 
-  return new Autor(row.id, row.nome, row.nacionalidade, row.data_nascimento);
+  return Autor.fromRow(row);
 }
 
 // Função que contém as regras de negócio para remover um autor

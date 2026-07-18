@@ -1,3 +1,5 @@
+import { LivroRow } from "../interfaces/LivroInterface";
+
 export class Livro {
   constructor(
     public id: number,
@@ -7,4 +9,9 @@ export class Livro {
     public autor_id: number,
     public quantidade: number
   ) {}
+
+  // Converte uma linha do banco (LivroRow) em uma instância da classe Livro
+  static fromRow(row: LivroRow): Livro {
+    return new Livro(row.id, row.titulo, row.ano_publicacao, row.genero, row.autor_id, row.quantidade);
+  }
 }

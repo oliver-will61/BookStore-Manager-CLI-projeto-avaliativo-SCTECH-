@@ -43,7 +43,7 @@ export async function ServiceCadastraLivro(
   }
 
   const row = await repositoryCadastraLivro(tituloTratado, anoTratado ? Number(anoTratado) : null, generoTratado, autor_id, qtd);
-  return new Livro(row.id, row.titulo, row.ano_publicacao, row.genero, row.autor_id, row.quantidade);
+  return Livro.fromRow(row);
 }
 
 export async function ServiceListarLivros(): Promise<{
@@ -53,7 +53,7 @@ export async function ServiceListarLivros(): Promise<{
   const rows = await repositoryListarLivros();
 
   return {
-    livros: rows.map(row => new Livro(row.id, row.titulo, row.ano_publicacao, row.genero, row.autor_id, row.quantidade)),
+    livros: rows.map(row => Livro.fromRow(row)),
     vazio: rows.length === 0,
   };
 }
@@ -64,7 +64,7 @@ export async function ServiceConsultarLivro(
   validarId(id);
 
   const row = await repositoryBuscarPorId(id);
-  return row ? new Livro(row.id, row.titulo, row.ano_publicacao, row.genero, row.autor_id, row.quantidade) : null;
+  return row ? Livro.fromRow(row) : null;
 }
 
 export async function ServiceAtualizarLivro(
@@ -118,7 +118,7 @@ export async function ServiceAtualizarLivro(
     throw new Error("Erro ao atualizar livro.");
   }
 
-  return new Livro(row.id, row.titulo, row.ano_publicacao, row.genero, row.autor_id, row.quantidade);
+  return Livro.fromRow(row);
 }
 
 export async function ServiceRemoverLivro(

@@ -33,7 +33,7 @@ export async function ServiceCadastraCliente(
   }
 
   const row = await repositoryCadastraCliente(nome.trim(), emailTratado, telefoneTratado, enderecoTratado);
-  return new Cliente(row.id, row.nome, row.email, row.telefone, row.endereco);
+  return Cliente.fromRow(row);
 }
 
 export async function ServiceListarClientes(): Promise<{
@@ -43,7 +43,7 @@ export async function ServiceListarClientes(): Promise<{
   const rows = await repositoryListarClientes();
 
   return {
-    clientes: rows.map(row => new Cliente(row.id, row.nome, row.email, row.telefone, row.endereco)),
+    clientes: rows.map(row => Cliente.fromRow(row)),
     vazio: rows.length === 0,
   };
 }
@@ -54,7 +54,7 @@ export async function ServiceConsultarCliente(
   validarId(id);
 
   const row = await repositoryBuscarPorId(id);
-  return row ? new Cliente(row.id, row.nome, row.email, row.telefone, row.endereco) : null;
+  return row ? Cliente.fromRow(row) : null;
 }
 
 export async function ServiceAtualizarCliente(
@@ -100,7 +100,7 @@ export async function ServiceAtualizarCliente(
     throw new Error("Erro ao atualizar cliente.");
   }
 
-  return new Cliente(row.id, row.nome, row.email, row.telefone, row.endereco);
+  return Cliente.fromRow(row);
 }
 
 export async function ServiceRemoverCliente(

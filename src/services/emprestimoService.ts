@@ -40,7 +40,7 @@ export async function ServiceCadastraEmprestimo(
   const dataDevolucao = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split("T")[0];
 
   const row = await repositoryCadastraEmprestimo(cliente_id, livro_id, "emprestado", hoje, dataDevolucao);
-  return new Emprestimo(row.id, row.cliente_id, row.livro_id, row.data_emprestimo, row.data_devolucao, row.status);
+  return Emprestimo.fromRow(row);
 }
 
 export async function ServiceListarEmprestimos(): Promise<{
@@ -88,5 +88,5 @@ export async function ServiceDevolverLivro(
     throw new Error("Erro ao registrar devolução.");
   }
 
-  return new Emprestimo(row.id, row.cliente_id, row.livro_id, row.data_emprestimo, row.data_devolucao, row.status);
+  return Emprestimo.fromRow(row);
 }
