@@ -165,6 +165,37 @@ Nenhum SQL é repetido — as classes genéricas servem a todas as entidades.
 - Se ID não existir: `"Livro não encontrado."`
 - Se ID inválido: `"ID inválido."`
 
+## Funcionalidades — Empréstimos
+
+### Registrar empréstimo
+- Exibe lista de clientes e livros disponíveis antes de solicitar os IDs
+- Valida: cliente existe, livro existe, livro com exemplares disponíveis
+- **Disponibilidade** calculada dinamicamente: `quantidade - empréstimos ativos`
+- Se cliente não existir: `"Cliente não encontrado."` (retornado imediatamente após digitar o ID)
+- Se livro não existir: `"Livro não encontrado."`
+- Se não houver exemplares disponíveis: `"Livro '...' não possui exemplares disponíveis no momento."`
+- `data_emprestimo` definida como a data atual
+- `data_devolucao` calculada automaticamente como 7 dias após o empréstimo
+- Status definido como `"emprestado"`
+- Retorna o ID do empréstimo registrado
+
+### Listar empréstimos
+- Exibe todos os empréstimos com ID, nome do cliente, título do livro, datas e status
+- Dados do cliente e do livro são obtidos via JOIN com as tabelas `clientes` e `livros`
+- Se não houver empréstimos: `"Nenhum empréstimo registrado."`
+
+### Consultar empréstimo por ID
+- Solicita o ID e exibe todos os dados do empréstimo (incluindo nome do cliente e título do livro)
+- Se ID não existir: `"Empréstimo não encontrado."`
+- Se ID inválido (zero/negativo): `"ID inválido."`
+
+### Devolver livro
+- Solicita o ID do empréstimo e registra a devolução
+- Define `data_devolucao` como a data atual e altera status para `"devolvido"`
+- Se ID não existir: `"Empréstimo não encontrado."`
+- Se o livro já foi devolvido: `"Este livro já foi devolvido."`
+- Se ID inválido: `"ID inválido."`
+
 ## Banco de Dados
 
 PostgreSQL com as tabelas:
