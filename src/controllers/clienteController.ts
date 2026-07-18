@@ -1,12 +1,12 @@
 import { ServiceCadastraCliente, ServiceListarClientes, ServiceConsultarCliente, ServiceAtualizarCliente, ServiceRemoverCliente } from "../services/clienteService";
-import { ClienteRow } from "../models/interfaces/ClienteInterface";
+import { Cliente } from "../models/classes/Cliente";
 
 export async function controllerCadastraCliente(
   nome: string,
   email: string,
   telefone: string,
   endereco: string
-): Promise<{ sucesso: boolean; mensagem: string; cliente?: ClienteRow }> {
+): Promise<{ sucesso: boolean; mensagem: string; cliente?: Cliente }> {
   try {
     const cliente = await ServiceCadastraCliente(nome, email, telefone, endereco);
     return {
@@ -26,7 +26,7 @@ export async function controllerCadastraCliente(
 export async function controllerListarClientes(): Promise<{
   sucesso: boolean;
   mensagem: string;
-  clientes?: ClienteRow[];
+  clientes?: Cliente[];
 }> {
   try {
     const { clientes, vazio } = await ServiceListarClientes();
@@ -55,7 +55,7 @@ export async function controllerListarClientes(): Promise<{
 
 export async function controllerConsultarCliente(
   id: number
-): Promise<{ sucesso: boolean; mensagem: string; cliente?: ClienteRow }> {
+): Promise<{ sucesso: boolean; mensagem: string; cliente?: Cliente }> {
   try {
     const cliente = await ServiceConsultarCliente(id);
 
@@ -86,7 +86,7 @@ export async function controllerAtualizarCliente(
   email: string,
   telefone: string,
   endereco: string
-): Promise<{ sucesso: boolean; mensagem: string; cliente?: ClienteRow }> {
+): Promise<{ sucesso: boolean; mensagem: string; cliente?: Cliente }> {
   try {
     const cliente = await ServiceAtualizarCliente(id, nome, email, telefone, endereco);
     return {

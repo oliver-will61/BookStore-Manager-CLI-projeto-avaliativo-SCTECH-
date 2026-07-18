@@ -1,7 +1,7 @@
 import { repositoryCadastraLivro, repositoryBuscarPorTitulo, repositoryListarLivros, repositoryBuscarPorId, repositoryAtualizarLivro, repositoryRemoverLivro } from "../repositories/livroRepository";
 import { repositoryBuscarPorId as repositoryBuscarAutorPorId } from "../repositories/autorRepository";
 
-import { LivroRow } from "../models/interfaces/LivroInterface";
+import { Livro } from "../models/classes/Livro";
 
 export async function ServiceCadastraLivro(
   titulo: string,
@@ -9,7 +9,7 @@ export async function ServiceCadastraLivro(
   genero: string,
   autor_id: number,
   quantidade: string
-): Promise<LivroRow> {
+): Promise<Livro> {
   if (!titulo || titulo.trim().length === 0) {
     throw new Error("Título é obrigatório.");
   }
@@ -43,35 +43,31 @@ export async function ServiceCadastraLivro(
     throw new Error("Já existe um livro cadastrado com este título.");
   }
 
-  return await repositoryCadastraLivro(
-    tituloTratado,
-    anoTradado ? Number(anoTradado) : null,
-    generoTratado,
-    autor_id,
-    qtd
-  );
+  const row = await repositoryCadastraLivro(tituloTratado, anoTradado ? Number(anoTradado) : null, generoTratado, autor_id, qtd);
+  return new Livro(row.id, row.titulo, row.ano_publicacao, row.genero, row.autor_id, row.quantidade);
 }
 
 export async function ServiceListarLivros(): Promise<{
-  livros: LivroRow[];
+  livros: Livro[];
   vazio: boolean;
 }> {
-  const livros = await repositoryListarLivros();
+  const rows = await repositoryListarLivros();
 
   return {
-    livros,
-    vazio: livros.length === 0,
+    livros: rows.map(row => new Livro(row.id, row.titulo, row.ano_publicacao, row.genero, row.autor_id, row.quantidade)),
+    vazio: rows.length === 0,
   };
 }
 
 export async function ServiceConsultarLivro(
   id: number
-): Promise<LivroRow | null> {
+): Promise<Livro | null> {
   if (!id || id <= 0) {
     throw new Error("ID inválido.");
   }
 
-  return await repositoryBuscarPorId(id);
+  const row = await repositoryBuscarPorId(id);
+  return row ? new Livro(row.id, row.titulo, row.ano_publicacao, row.genero, row.autor_id, row.quantidade) : null;
 }
 
 export async function ServiceAtualizarLivro(
@@ -81,7 +77,7 @@ export async function ServiceAtualizarLivro(
   genero: string,
   autor_id: number,
   quantidade: string
-): Promise<LivroRow> {
+): Promise<Livro> {
   if (!id || id <= 0) {
     throw new Error("ID inválido.");
   }
@@ -123,20 +119,13 @@ export async function ServiceAtualizarLivro(
     throw new Error("Já existe outro livro cadastrado com este título.");
   }
 
-  const livroAtualizado = await repositoryAtualizarLivro(
-    id,
-    tituloTratado,
-    anoTradado ? Number(anoTradado) : null,
-    generoTratado,
-    autor_id,
-    qtd
-  );
+  const row = await repositoryAtualizarLivro(id, tituloTratado, anoTradado ? Number(anoTradado) : null, generoTratado, autor_id, qtd);
 
-  if (!livroAtualizado) {
+  if (!row) {
     throw new Error("Erro ao atualizar livro.");
   }
 
-  return livroAtualizado;
+  return new Livro(row.id, row.titulo, row.ano_publicacao, row.genero, row.autor_id, row.quantidade);
 }
 
 export async function ServiceRemoverLivro(

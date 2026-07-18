@@ -1,13 +1,13 @@
 import { repositoryCadastraCliente, repositoryBuscarPorEmail, repositoryListarClientes, repositoryBuscarPorId, repositoryAtualizarCliente, repositoryRemoverCliente } from "../repositories/clienteRepository";
 
-import { ClienteRow } from "../models/interfaces/ClienteInterface";
+import { Cliente } from "../models/classes/Cliente";
 
 export async function ServiceCadastraCliente(
   nome: string,
   email: string,
   telefone: string,
   endereco: string
-): Promise<ClienteRow> {
+): Promise<Cliente> {
   if (!nome || nome.trim().length === 0) {
     throw new Error("Nome é obrigatório.");
   }
@@ -31,29 +31,31 @@ export async function ServiceCadastraCliente(
     throw new Error("Já existe um cliente cadastrado com este email.");
   }
 
-  return await repositoryCadastraCliente(nome.trim(), emailTratado, telefoneTratado, enderecoTratado);
+  const row = await repositoryCadastraCliente(nome.trim(), emailTratado, telefoneTratado, enderecoTratado);
+  return new Cliente(row.id, row.nome, row.email, row.telefone, row.endereco);
 }
 
 export async function ServiceListarClientes(): Promise<{
-  clientes: ClienteRow[];
+  clientes: Cliente[];
   vazio: boolean;
 }> {
-  const clientes = await repositoryListarClientes();
+  const rows = await repositoryListarClientes();
 
   return {
-    clientes,
-    vazio: clientes.length === 0,
+    clientes: rows.map(row => new Cliente(row.id, row.nome, row.email, row.telefone, row.endereco)),
+    vazio: rows.length === 0,
   };
 }
 
 export async function ServiceConsultarCliente(
   id: number
-): Promise<ClienteRow | null> {
+): Promise<Cliente | null> {
   if (!id || id <= 0) {
     throw new Error("ID inválido.");
   }
 
-  return await repositoryBuscarPorId(id);
+  const row = await repositoryBuscarPorId(id);
+  return row ? new Cliente(row.id, row.nome, row.email, row.telefone, row.endereco) : null;
 }
 
 export async function ServiceAtualizarCliente(
@@ -62,7 +64,7 @@ export async function ServiceAtualizarCliente(
   email: string,
   telefone: string,
   endereco: string
-): Promise<ClienteRow> {
+): Promise<Cliente> {
   if (!id || id <= 0) {
     throw new Error("ID inválido.");
   }
@@ -95,19 +97,13 @@ export async function ServiceAtualizarCliente(
     throw new Error("Já existe outro cliente cadastrado com este email.");
   }
 
-  const clienteAtualizado = await repositoryAtualizarCliente(
-    id,
-    nomeTratado,
-    emailTratado,
-    telefoneTratado,
-    enderecoTratado
-  );
+  const row = await repositoryAtualizarCliente(id, nomeTratado, emailTratado, telefoneTratado, enderecoTratado);
 
-  if (!clienteAtualizado) {
+  if (!row) {
     throw new Error("Erro ao atualizar cliente.");
   }
 
-  return clienteAtualizado;
+  return new Cliente(row.id, row.nome, row.email, row.telefone, row.endereco);
 }
 
 export async function ServiceRemoverCliente(

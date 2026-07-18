@@ -9,11 +9,12 @@ import {
 import { repositoryBuscarPorId as repositoryBuscarLivroPorId } from "../repositories/livroRepository";
 import { repositoryBuscarPorId as repositoryBuscarClientePorId } from "../repositories/clienteRepository";
 import { EmprestimoRow, EmprestimoCompletoRow } from "../models/interfaces/EmprestimoInterface";
+import { Emprestimo } from "../models/classes/Emprestimo";
 
 export async function ServiceCadastraEmprestimo(
   cliente_id: number,
   livro_id: number
-): Promise<EmprestimoRow> {
+): Promise<Emprestimo> {
   if (!cliente_id || cliente_id <= 0) {
     throw new Error("ID do cliente inválido.");
   }
@@ -40,9 +41,10 @@ export async function ServiceCadastraEmprestimo(
   }
 
   const hoje = new Date().toISOString().split("T")[0];
-  const dataDevolucao = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split("T")[0]; // 7 dias em ms: 7 * 24h * 60min * 60s * 1000ms
+  const dataDevolucao = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split("T")[0];
 
-  return await repositoryCadastraEmprestimo(cliente_id, livro_id, "emprestado", hoje, dataDevolucao);
+  const row = await repositoryCadastraEmprestimo(cliente_id, livro_id, "emprestado", hoje, dataDevolucao);
+  return new Emprestimo(row.id, row.cliente_id, row.livro_id, row.data_emprestimo, row.data_devolucao, row.status);
 }
 
 export async function ServiceListarEmprestimos(): Promise<{
@@ -73,7 +75,7 @@ export async function ServiceListarLivrosComDisponivel(): Promise<{ id: number; 
 
 export async function ServiceDevolverLivro(
   id: number
-): Promise<EmprestimoRow> {
+): Promise<Emprestimo> {
   if (!id || id <= 0) {
     throw new Error("ID inválido.");
   }
@@ -88,11 +90,11 @@ export async function ServiceDevolverLivro(
   }
 
   const hoje = new Date().toISOString().split("T")[0];
-  const emprestimoAtualizado = await repositoryDevolverLivro(id, hoje);
+  const row = await repositoryDevolverLivro(id, hoje);
 
-  if (!emprestimoAtualizado) {
+  if (!row) {
     throw new Error("Erro ao registrar devolução.");
   }
 
-  return emprestimoAtualizado;
+  return new Emprestimo(row.id, row.cliente_id, row.livro_id, row.data_emprestimo, row.data_devolucao, row.status);
 }

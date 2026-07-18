@@ -5,12 +5,13 @@ import {
   ServiceDevolverLivro,
   ServiceListarLivrosComDisponivel,
 } from "../services/emprestimoService";
-import { EmprestimoRow, EmprestimoCompletoRow } from "../models/interfaces/EmprestimoInterface";
+import { Emprestimo } from "../models/classes/Emprestimo";
+import { EmprestimoCompletoRow } from "../models/interfaces/EmprestimoInterface";
 
 export async function controllerCadastraEmprestimo(
   cliente_id: number,
   livro_id: number
-): Promise<{ sucesso: boolean; mensagem: string; emprestimo?: EmprestimoRow }> {
+): Promise<{ sucesso: boolean; mensagem: string; emprestimo?: Emprestimo }> {
   try {
     const emprestimo = await ServiceCadastraEmprestimo(cliente_id, livro_id);
     return {
@@ -116,7 +117,7 @@ export async function controllerListarLivrosComDisponivel(): Promise<{
 
 export async function controllerDevolverLivro(
   id: number
-): Promise<{ sucesso: boolean; mensagem: string; emprestimo?: EmprestimoRow }> {
+): Promise<{ sucesso: boolean; mensagem: string; emprestimo?: Emprestimo }> {
   try {
     const emprestimo = await ServiceDevolverLivro(id);
     return {

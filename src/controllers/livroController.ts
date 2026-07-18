@@ -1,5 +1,5 @@
 import { ServiceCadastraLivro, ServiceListarLivros, ServiceConsultarLivro, ServiceAtualizarLivro, ServiceRemoverLivro } from "../services/livroService";
-import { LivroRow } from "../models/interfaces/LivroInterface";
+import { Livro } from "../models/classes/Livro";
 
 export async function controllerCadastraLivro(
   titulo: string,
@@ -7,7 +7,7 @@ export async function controllerCadastraLivro(
   genero: string,
   autor_id: number,
   quantidade: string
-): Promise<{ sucesso: boolean; mensagem: string; livro?: LivroRow }> {
+): Promise<{ sucesso: boolean; mensagem: string; livro?: Livro }> {
   try {
     const livro = await ServiceCadastraLivro(titulo, ano_publicacao, genero, autor_id, quantidade);
     return {
@@ -27,7 +27,7 @@ export async function controllerCadastraLivro(
 export async function controllerListarLivros(): Promise<{
   sucesso: boolean;
   mensagem: string;
-  livros?: LivroRow[];
+  livros?: Livro[];
 }> {
   try {
     const { livros, vazio } = await ServiceListarLivros();
@@ -56,7 +56,7 @@ export async function controllerListarLivros(): Promise<{
 
 export async function controllerConsultarLivro(
   id: number
-): Promise<{ sucesso: boolean; mensagem: string; livro?: LivroRow }> {
+): Promise<{ sucesso: boolean; mensagem: string; livro?: Livro }> {
   try {
     const livro = await ServiceConsultarLivro(id);
 
@@ -88,7 +88,7 @@ export async function controllerAtualizarLivro(
   genero: string,
   autor_id: number,
   quantidade: string
-): Promise<{ sucesso: boolean; mensagem: string; livro?: LivroRow }> {
+): Promise<{ sucesso: boolean; mensagem: string; livro?: Livro }> {
   try {
     const livro = await ServiceAtualizarLivro(id, titulo, ano_publicacao, genero, autor_id, quantidade);
     return {
