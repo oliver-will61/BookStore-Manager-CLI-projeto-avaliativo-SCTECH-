@@ -3,6 +3,7 @@ import { AutoresMenu } from "./autoresMenu";
 import { ClientesMenu } from "./clientesMenu";
 import { LivrosMenu } from "./livrosMenu";
 import { EmprestimosMenu } from "./emprestimosMenu";
+import { RelatoriosMenu } from "./relatoriosMenu";
 
 export class MainMenu extends Menu {
   protected title = "BookStore Manager CLI";
@@ -35,8 +36,7 @@ export class MainMenu extends Menu {
     {
       label: "Relatórios",
       handler: async () => {
-        console.log("\nFuncionalidade: Relatórios.\n");
-        await this.question("Pressione Enter para voltar...");
+        await new RelatoriosMenu().start();
       },
     },
     {
