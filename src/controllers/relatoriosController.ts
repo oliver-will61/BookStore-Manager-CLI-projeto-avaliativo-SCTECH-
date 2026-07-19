@@ -6,8 +6,15 @@ import {
   ServiceClientesComEmprestimosAtivos,
 } from "../services/relatoriosService";
 import { extrairMensagemErro } from "../utils/validators";
+import {
+  LivroDisponivelRow,
+  LivroEmprestadoRow,
+  LivrosPorAutorRow,
+  EmprestimosPorLivroRow,
+  ClienteEmprestimoAtivoRow,
+} from "../models/interfaces/RelatorioInterface";
 
-export async function controllerLivrosDisponiveis() {
+export async function controllerLivrosDisponiveis(): Promise<{ sucesso: boolean; mensagem: string; livros?: LivroDisponivelRow[] }> {
   try {
     const { livros, vazio } = await ServiceLivrosDisponiveis();
 
@@ -22,7 +29,7 @@ export async function controllerLivrosDisponiveis() {
   }
 }
 
-export async function controllerLivrosEmprestados() {
+export async function controllerLivrosEmprestados(): Promise<{ sucesso: boolean; mensagem: string; livros?: LivroEmprestadoRow[] }> {
   try {
     const { livros, vazio } = await ServiceLivrosEmprestados();
 
@@ -37,7 +44,7 @@ export async function controllerLivrosEmprestados() {
   }
 }
 
-export async function controllerLivrosPorAutor() {
+export async function controllerLivrosPorAutor(): Promise<{ sucesso: boolean; mensagem: string; autores?: LivrosPorAutorRow[] }> {
   try {
     const { autores, vazio } = await ServiceLivrosPorAutor();
 
@@ -52,7 +59,7 @@ export async function controllerLivrosPorAutor() {
   }
 }
 
-export async function controllerEmprestimosPorLivro() {
+export async function controllerEmprestimosPorLivro(): Promise<{ sucesso: boolean; mensagem: string; livros?: EmprestimosPorLivroRow[] }> {
   try {
     const { livros, vazio } = await ServiceEmprestimosPorLivro();
 
@@ -67,7 +74,7 @@ export async function controllerEmprestimosPorLivro() {
   }
 }
 
-export async function controllerClientesComEmprestimosAtivos() {
+export async function controllerClientesComEmprestimosAtivos(): Promise<{ sucesso: boolean; mensagem: string; clientes?: ClienteEmprestimoAtivoRow[] }> {
   try {
     const { clientes, vazio } = await ServiceClientesComEmprestimosAtivos();
 

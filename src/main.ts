@@ -11,7 +11,7 @@ async function main(): Promise<void> {
 
 // Captura erros não tratados que escaparem dos try/catch dos controllers
 // Exibe a mensagem, fecha a interface readline e encerra o processo
-main().catch((err) => {
+main().catch((err: unknown) => {
   console.error("\nErro fatal:", err instanceof Error ? err.message : err);
   Menu.close();
   process.exit(1);
