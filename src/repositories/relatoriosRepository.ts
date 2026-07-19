@@ -63,7 +63,8 @@ export async function repositoryEmprestimosPorLivro(): Promise<EmprestimosPorLiv
      JOIN autores a ON a.id = l.autor_id
      LEFT JOIN emprestimos e ON e.livro_id = l.id
      GROUP BY l.id, l.titulo, a.nome
-     ORDER BY total_emprestimos DESC, l.titulo`
+           ORDER BY total_emprestimos DESC, l.titulo
+      LIMIT 10`
   );
 
   return result.rows;
@@ -76,7 +77,8 @@ export async function repositoryClientesComEmprestimosAtivos(): Promise<ClienteE
      FROM clientes c
      JOIN emprestimos e ON e.cliente_id = c.id AND e.status = 'emprestado'
      GROUP BY c.id, c.nome, c.email, c.telefone
-     ORDER BY emprestimos_ativos DESC, c.nome`
+      ORDER BY emprestimos_ativos DESC, c.nome
+      LIMIT 10`
   );
 
   return result.rows;
