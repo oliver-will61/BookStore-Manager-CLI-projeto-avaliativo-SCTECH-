@@ -1,54 +1,145 @@
 # BookStore Manager CLI
 
-Sistema de gerenciamento de livraria via terminal (CLI) com PostgreSQL.
+Sistema de gerenciamento de livraria via terminal (CLI) com PostgreSQL e TypeScript.
 
-## Arquitetura
+---
+
+## Descrição do Projeto
+
+Aplicação CLI para gerenciamento de uma livraria, permitindo cadastrar autores, livros, clientes e empréstimos, além de gerar relatórios. O sistema segue arquitetura em camadas (Menu → Controller → Service → Repository → BaseRepository → DB) e utiliza PostgreSQL como banco de dados relacional.
+
+---
+
+## Objetivo
+
+Oferecer uma interface de terminal para operações CRUD completas sobre as entidades de uma livraria, com validações de negócio, controle de disponibilidade de exemplares e relatórios com consultas SQL utilizando JOINs, agregações e ordenação.
+
+---
+
+## Tecnologias Utilizadas
+
+| Tecnologia | Versão | Finalidade |
+|---|---|--- |
+| `Node.js` | ≥ 18 | Runtime |
+| `TypeScript` | ≥ 5 | Linguagem e tipagem |
+| `PostgreSQL` | ≥ 14 | Banco de dados relacional |
+| `pg` | ^8.22.0 | Driver PostgreSQL para Node.js |
+| `dotenv` | ^17.4.2 | Gerenciamento de variáveis de ambiente |
+| `readline` | nativo | Interface de terminal (CLI) |
+
+---
+
+## Requisitos para Execução
+
+- Node.js 18 ou superior
+- PostgreSQL 14 ou superior
+- npm (acompanha o Node.js)
+- Um banco de dados PostgreSQL criado (ver seção abaixo)
+
+---
+
+## Configuração do Banco de Dados
+
+### 1. Criar o banco de dados
+
+Acesse o PostgreSQL e crie o banco:
+
+```sql
+CREATE DATABASE bookstoredb;
+CREATE USER bookstoresctechuser WITH PASSWORD 'sua_senha';
+GRANT ALL PRIVILEGES ON DATABASE bookstoredb TO bookstoresctechuser;
+```
+
+### 2. Configurar variáveis de ambiente
+
+Crie um arquivo `.env` na raiz do projeto:
+
+```env
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=bookstoredb
+DB_USER=bookstoresctechuser
+DB_PASSWORD=sua_senha
+```
+
+### 3. Executar o schema
+
+Execute o script SQL para criar as tabelas e popular com dados iniciais:
+
+```bash
+psql -U bookstoresctechuser -d bookstoredb -f src/database/schema.sql
+```
+
+### Estrutura das tabelas
+
+```sql
+autores (id SERIAL PK, nome VARCHAR NOT NULL UNIQUE, nacionalidade VARCHAR, data_nascimento DATE)
+
+livros (id SERIAL PK, titulo VARCHAR NOT NULL UNIQUE, ano_publicacao INTEGER, genero VARCHAR, autor_id INTEGER FK → autores.id, quantidade INTEGER NOT NULL DEFAULT 1)
+
+clientes (id SERIAL PK, nome VARCHAR NOT NULL, email VARCHAR NOT NULL UNIQUE, telefone VARCHAR, endereco VARCHAR)
+
+emprestimos (id SERIAL PK, cliente_id INTEGER FK → clientes.id, livro_id INTEGER FK → livros.id, data_emprestimo DATE NOT NULL DEFAULT CURRENT_DATE, data_devolucao DATE, status VARCHAR NOT NULL DEFAULT 'emprestado')
+```
+
+---
+
+## Instalação
+
+```bash
+# Clone o repositório
+git clone https://github.com/oliver-will61/BookStore-Manager-CLI-projeto-avaliativo-SCTECH-/tree/main
+cd bookstore-manager-cli
+
+# Instale as dependências
+npm install
+```
+
+---
+
+## Execução
+
+```bash
+# Compilar TypeScript para JavaScript
+npm run build
+
+# Iniciar a aplicação
+npm start
+```
+
+O menu principal será exibido no terminal:
 
 ```
-Usuário → Menu → Controller → Service → Repository → Operação Genérica → DB
+=== BookStore Manager CLI ===
+
+1 - Autores
+2 - Livros
+3 - Clientes
+4 - Empréstimos
+5 - Relatórios
+6 - Encerrar aplicação
+
+Escolha uma opção:
 ```
 
-Cada camada tem responsabilidade única, permitindo reuso máximo entre as entidades.
+---
+
+## Arquitetura do Projeto
+
+```
+Usuário → Menu → Controller → Service → Repository → BaseRepository → DB
+```
 
 ### Camadas
 
-#### Menu (`src/menus/`)
-Coleta inputs do usuário e exibe resultados. Não contém lógica de negócio nem chama o banco diretamente.
-
-- Cada entidade tem seu próprio menu (`autoresMenu.ts`, `livrosMenu.ts`, etc.)
-- Todos extendem a classe abstrata `Menu` que fornece o loop genérico, exibição de opções e o método `question()`
-
-#### Controller (`src/controllers/`)
-Orquestra a operação: chama o Service, captura erros, monta resposta padronizada.
-
-- Retorno padrão: `{ sucesso: boolean, mensagem: string, dados?: T }`
-- Um controller por entidade, uma função exportada por operação
-
-#### Service (`src/services/`)
-Valida dados e aplica regras de negócio. Não sabe que o banco existe.
-
-- Um service por entidade
-- Validações como "nome é obrigatório", "data deve estar no formato AAAA-MM-DD"
-
-#### Repository (`src/repositories/`)
-Mapeia dados da entidade (tipagem) e delega a execução para as classes genéricas. Não monta SQL.
-
-- Define a interface da entidade (`AutorRow`, `ClienteRow`, etc.)
-- Chama as classes genéricas (`Cadastrar.enviar()`, `Consultar.porId()`, etc.)
-
-#### Operações Genéricas (`src/models/classes/BaseRepository.ts`)
-Executam SQL sem repetição de código. Classe única com todos os métodos estáticos.
-
-| Método | SQL gerado |
-|---|---|
-| `insert(tabela, dados)` | `INSERT INTO tabela (cols) VALUES ($1..$n) RETURNING *` |
-| `findById(tabela, id)` | `SELECT * FROM tabela WHERE id = $1` |
-| `findAll(tabela)` | `SELECT * FROM tabela ORDER BY id` |
-| `update(tabela, id, dados)` | `UPDATE tabela SET col=$1 WHERE id=$n RETURNING *` |
-| `delete(tabela, id)` | `DELETE FROM tabela WHERE id = $1` |
-
-- Nomes de tabela validados contra whitelist
-- Valores sempre parametrizados (proteção contra SQL injection)
+| Camada | Responsabilidade | Não faz |
+|---|---|---|
+| **Menu** | I/O com usuário (perguntas, exibição) | Lógica de negócio, acesso a banco |
+| **Controller** | Orquestração, try/catch, resposta padronizada | Regras de negócio |
+| **Service** | Validações e regras de negócio | SQL, acesso a banco |
+| **Repository** | Mapeamento de tipos, delega ao BaseRepository | Montagem de SQL |
+| **BaseRepository** | CRUD genérico com SQL parametrizado | Conhecimento das entidades |
+| **DB** | Pool de conexão PostgreSQL | — |
 
 ### Fluxo exemplo — Cadastrar Autor
 
@@ -64,163 +155,234 @@ autorRepository.ts        → Chama BaseRepository.insert("autores", dados)
 BaseRepository.ts         → Monta INSERT e executa no banco
     ↓
 DB
-
 ```
 
-### Reuso entre entidades
+### Padrão de resposta dos Controllers
 
-O fluxo é idêntico para qualquer entidade. O que muda:
+Todas as funções de controller retornam um objeto padronizado:
 
-| O quê muda | Onde | Exemplo |
+```typescript
+{ sucesso: boolean; mensagem: string; ...dadosDaEntidade }
+```
+
+Se `sucesso` for `false`, a mensagem explica o erro (validação, banco, etc.). O menu apenas exibe a mensagem — sem lógica condicional complexa.
+
+### Principais decisões técnicas
+
+| Decisão | Motivo |
+|---|---|
+| SQL dinâmico no BaseRepository | Evita repetição de consultas idênticas entre entidades |
+| Whitelist de tabelas | Previne SQL injection via nome de tabela |
+| Parâmetros `$1`, `$2`, ... | Previne SQL injection via valores |
+| `RETURNING *` em INSERT/UPDATE | Retorna o registro completo (incluindo ID gerado) sem query extra |
+| Classes de modelo (`Autor`, `Cliente`, etc.) | Tipagem forte e método `fromRow()` para conversão |
+| Função `validarId()` | Centraliza validação de IDs em um único lugar |
+| Função `extrairMensagemErro()` | Centraliza extração de mensagens de erro em catch |
+| `console.clear()` no início do loop | Interface limpa a cada navegação |
+| `pool.on("error")` | Previne crash por falhas assíncronas de conexão |
+
+---
+
+## Funcionalidades Implementadas
+
+### Autores
+
+| Operação | Descrição |
+|---|---|
+| Cadastrar | Nome, nacionalidade, data de nascimento. Valida nome obrigatório, formato AAAA-MM-DD, nome único. |
+| Listar | Exibe todos os autores cadastrados. |
+| Consultar por ID | Exibe dados completos de um autor específico. |
+| Atualizar | Altera dados mantendo valores atuais se campo deixado em branco. |
+| Remover | Exclui autor do banco. |
+
+### Clientes
+
+| Operação | Descrição |
+|---|---|
+| Cadastrar | Nome, email, telefone, endereço. Valida nome e email obrigatórios, formato de email, email único (case-insensitive). |
+| Listar | Exibe todos os clientes cadastrados. |
+| Consultar por ID | Exibe dados completos de um cliente específico. |
+| Atualizar | Altera dados mantendo valores atuais se campo deixado em branco. |
+| Remover | Exclui cliente do banco. |
+
+### Livros
+
+| Operação | Descrição |
+|---|---|
+| Cadastrar | Título, ano, gênero, autor (selecionado de lista), quantidade. Valida título obrigatório e único, ano com 4 dígitos, autor existente, quantidade inteira positiva. |
+| Listar | Exibe todos os livros cadastrados. |
+| Consultar por ID | Exibe dados completos de um livro específico. |
+| Atualizar | Altera dados mantendo valores atuais se campo deixado em branco. |
+| Remover | Exclui livro do banco. |
+
+### Empréstimos
+
+| Operação | Descrição |
+|---|---|
+| Registrar | Seleciona cliente e livro (com disponibilidade). Valida cliente e livro existentes, calcula disponibilidade = `quantidade - empréstimos ativos`. Define `data_emprestimo` = hoje, `data_devolucao` = hoje + 7 dias, status = `emprestado`. |
+| Listar | Exibe todos os empréstimos com nome do cliente e título do livro (JOIN). |
+| Consultar por ID | Exibe dados completos com nome do cliente e título do livro. |
+| Devolver | Registra devolução: define `data_devolucao` = hoje, status = `devolvido`. Impede devolução duplicada. |
+
+### Relatórios
+
+| Relatório | Descrição | SQL |
 |---|---|---|
-| Nome da tabela | Repository | `"autores"`, `"livros"`, `"clientes"`, `"emprestimos"` |
-| Campos do formulário | Menu | Nome/nacionalidade vs Título/gênero |
-| Validações específicas | Service | Nome obrigatório vs Email único |
-| Interface da entidade | Repository | `AutorRow`, `LivroRow`, `ClienteRow` |
+| Livros Disponíveis | Livros com exemplares disponíveis (quantidade > empréstimos ativos) | `LEFT JOIN` + subquery + `WHERE` |
+| Livros Emprestados | Livros com pelo menos um empréstimo ativo | `JOIN` + subquery + `ORDER BY` |
+| Livros por Autor | Contagem de livros por autor | `LEFT JOIN` + `COUNT` + `GROUP BY` |
+| Empréstimos por Livro | Total de empréstimos por livro (top 10) | `LEFT JOIN` + `COUNT` + `GROUP BY` + `ORDER BY DESC` + `LIMIT 10` |
+| Clientes com Empréstimos Ativos | Clientes com empréstimos em aberto (top 10) | `JOIN` + `COUNT` + `GROUP BY` + `ORDER BY DESC` + `LIMIT 10` |
 
-Nenhum SQL é repetido — as classes genéricas servem a todas as entidades.
+### Tratamento de Erros
 
-## Funcionalidades — Autores
+O sistema captura e exibe mensagens claras sem interromper a execução nos seguintes casos:
 
-### Cadastrar autor
-- Coleta nome, nacionalidade e data de nascimento
-- Valida: nome obrigatório, data no formato `AAAA-MM-DD`, nome único (sem duplicidade)
-- Retorna o ID do autor cadastrado
+- Autor inexistente ao cadastrar/atualizar livro
+- Cliente inexistente ao registrar empréstimo
+- Livro inexistente ao registrar empréstimo
+- Empréstimo inexistente ao tentar devolver
+- Livro sem exemplares disponíveis
+- Registros duplicados (nome de autor, email de cliente, título de livro)
+- Campos obrigatórios vazios
+- IDs inválidos (zero/negativo)
+- Formato inválido de data, email, ano ou quantidade
+- Livro já devolvido
+- Erros de conexão com o banco de dados
 
-### Listar autores
-- Exibe todos os autores com ID, nome, nacionalidade e data de nascimento
-- Se não houver autores: `"Nenhum autor cadastrado."`
+---
 
-### Consultar autor por ID
-- Solicita o ID e exibe todos os dados do autor
-- Se ID não existir: `"Autor não encontrado."`
-- Se ID inválido (zero/negativo): `"ID inválido."`
-
-### Atualizar autor
-- Solicita o ID, exibe os dados atuais e permite alterar cada campo
-- Deixar em branco mantém o valor atual
-- Validações: nome obrigatório, data no formato `AAAA-MM-DD`, nome único (excluindo o próprio ID)
-- Se ID não existir: `"Autor não encontrado."`
-
-### Remover autor
-- Solicita o ID e remove o autor
-- Se ID não existir: `"Autor não encontrado."`
-- Se ID inválido: `"ID inválido."`
-
-## Funcionalidades — Clientes
-
-### Cadastrar cliente
-- Coleta nome, email, telefone e endereço
-- Valida: nome obrigatório, email obrigatório + formato válido, email único (sem duplicidade)
-- Email é convertido para minúsculas antes de salvar
-- Retorna o ID do cliente cadastrado
-
-### Listar clientes
-- Exibe todos os clientes com ID, nome, email, telefone e endereço
-- Se não houver clientes: `"Nenhum cliente cadastrado."`
-
-### Consultar cliente por ID
-- Solicita o ID e exibe todos os dados do cliente
-- Se ID não existir: `"Cliente não encontrado."`
-- Se ID inválido (zero/negativo): `"ID inválido."`
-
-### Atualizar cliente
-- Solicita o ID, exibe os dados atuais e permite alterar cada campo
-- Deixar em branco mantém o valor atual
-- Validações: nome obrigatório, email obrigatório + formato válido, email único (excluindo o próprio ID)
-- Se ID não existir: `"Cliente não encontrado."`
-
-### Remover cliente
-- Solicita o ID e remove o cliente
-- Se ID não existir: `"Cliente não encontrado."`
-- Se ID inválido: `"ID inválido."`
-
-## Funcionalidades — Livros
-
-### Cadastrar livro
-- Coleta título, ano de publicação, gênero e ID do autor
-- Exibe lista de autores disponíveis antes de solicitar o ID do autor
-- Valida: título obrigatório, ano com 4 dígitos, título único (sem duplicidade), **autor deve existir no banco**
-- Se não houver autores cadastrados: `"Nenhum autor cadastrado. Cadastre um autor primeiro."`
-- Se autor não existir: `"Autor não encontrado. Cadastre o autor antes de vincular um livro."`
-- Retorna o ID do livro cadastrado
-
-### Listar livros
-- Exibe todos os livros com ID, título, ano, gênero e ID do autor
-- Se não houver livros: `"Nenhum livro cadastrado."`
-
-### Consultar livro por ID
-- Solicita o ID e exibe todos os dados do livro
-- Se ID não existir: `"Livro não encontrado."`
-- Se ID inválido (zero/negativo): `"ID inválido."`
-
-### Atualizar livro
-- Solicita o ID, exibe os dados atuais e permite alterar cada campo
-- Deixar em branco mantém o valor atual
-- Validações: título obrigatório, ano com 4 dígitos, título único (excluindo o próprio ID), autor deve existir
-- Se ID não existir: `"Livro não encontrado."`
-
-### Remover livro
-- Solicita o ID e remove o livro
-- Se ID não existir: `"Livro não encontrado."`
-- Se ID inválido: `"ID inválido."`
-
-## Funcionalidades — Empréstimos
-
-### Registrar empréstimo
-- Exibe lista de clientes e livros disponíveis antes de solicitar os IDs
-- Valida: cliente existe, livro existe, livro com exemplares disponíveis
-- **Disponibilidade** calculada dinamicamente: `quantidade - empréstimos ativos`
-- Se cliente não existir: `"Cliente não encontrado."` (retornado imediatamente após digitar o ID)
-- Se livro não existir: `"Livro não encontrado."`
-- Se não houver exemplares disponíveis: `"Livro '...' não possui exemplares disponíveis no momento."`
-- `data_emprestimo` definida como a data atual
-- `data_devolucao` calculada automaticamente como 7 dias após o empréstimo
-- Status definido como `"emprestado"`
-- Retorna o ID do empréstimo registrado
-
-### Listar empréstimos
-- Exibe todos os empréstimos com ID, nome do cliente, título do livro, datas e status
-- Dados do cliente e do livro são obtidos via JOIN com as tabelas `clientes` e `livros`
-- Se não houver empréstimos: `"Nenhum empréstimo registrado."`
-
-### Consultar empréstimo por ID
-- Solicita o ID e exibe todos os dados do empréstimo (incluindo nome do cliente e título do livro)
-- Se ID não existir: `"Empréstimo não encontrado."`
-- Se ID inválido (zero/negativo): `"ID inválido."`
-
-### Devolver livro
-- Solicita o ID do empréstimo e registra a devolução
-- Define `data_devolucao` como a data atual e altera status para `"devolvido"`
-- Se ID não existir: `"Empréstimo não encontrado."`
-- Se o livro já foi devolvido: `"Este livro já foi devolvido."`
-- Se ID inválido: `"ID inválido."`
-
-## Banco de Dados
-
-PostgreSQL com as tabelas:
-
-- `autores` — id, nome, nacionalidade, data_nascimento
-- `livros` — id, titulo, ano_publicacao, genero, autor_id (FK)
-- `clientes` — id, nome, email, telefone, endereco
-- `emprestimos` — id, cliente_id (FK), livro_id (FK), data_emprestimo, data_devolucao, status
-
-Schema completo em `src/database/schema.sql`.
-
-## Configuração
-
-```bash
-npm install
-npm run build
-npm start
-```
-
-Variáveis de ambiente (arquivo `.env`):
+## Estrutura de Pastas
 
 ```
-DB_HOST=localhost
-PORT=5432
-DB_NAME=bookstoredb
-DB_USER=postgres
-DB_PASSWORD=postgres
+src/
+├── main.ts                          # Ponto de entrada da aplicação
+├── controllers/                     # Camada de orquestração
+│   ├── autorController.ts
+│   ├── clienteController.ts
+│   ├── emprestimoController.ts
+│   ├── livroController.ts
+│   └── relatoriosController.ts
+├── database/                        # Conexão e schema do banco
+│   ├── connection.ts
+│   └── schema.sql
+├── menus/                           # Interface com o usuário
+│   ├── menu.ts                      # Classe abstrata base
+│   ├── mainMenu.ts                  # Menu principal
+│   ├── autoresMenu.ts
+│   ├── clientesMenu.ts
+│   ├── emprestimosMenu.ts
+│   ├── livrosMenu.ts
+│   └── relatoriosMenu.ts
+├── models/
+│   ├── classes/                     # Modelos de domínio
+│   │   ├── Autor.ts
+│   │   ├── BaseRepository.ts        # CRUD genérico
+│   │   ├── Cliente.ts
+│   │   ├── Emprestimo.ts
+│   │   └── Livro.ts
+│   └── interfaces/                  # Interfaces de dados
+│       ├── AutorInterface.ts
+│       ├── ClienteInterface.ts
+│       ├── EmprestimoInterface.ts
+│       ├── LivroInterface.ts
+│       └── RelatorioInterface.ts
+├── repositories/                    # Acesso a dados
+│   ├── autorRepository.ts
+│   ├── clienteRepository.ts
+│   ├── emprestimoRepository.ts
+│   ├── livroRepository.ts
+│   └── relatoriosRepository.ts
+├── services/                        # Regras de negócio
+│   ├── autorService.ts
+│   ├── clienteService.ts
+│   ├── emprestimoService.ts
+│   ├── livroService.ts
+│   └── relatoriosService.ts
+└── utils/                           # Utilitários
+    ├── formatDate.ts
+    └── validators.ts                # validarId() e extrairMensagemErro()
 ```
+
+---
+
+## Exemplos de Utilização
+
+### Cadastrar um autor
+
+```
+=== Gerenciar Autores ===
+
+1 - Cadastrar autor
+2 - Listar autores
+3 - Consultar autor por ID
+4 - Atualizar autor
+5 - Remover autor
+6 - Voltar
+
+Escolha uma opção: 1
+Nome: J. R. R. Tolkien
+Nacionalidade: Britânica
+Data de nascimento (AAAA-MM-DD): 1892-01-03
+Autor cadastrado com sucesso! ID: 1
+```
+
+### Registrar um empréstimo
+
+```
+=== Gerenciar Empréstimos ===
+
+1 - Registrar empréstimo
+2 - Listar empréstimos
+3 - Consultar empréstimo por ID
+4 - Devolver livro
+5 - Voltar
+
+Escolha uma opção: 1
+
+--- Clientes cadastrados ---
+ID: 1 | Nome: Maria Silva | Email: maria@email.com
+ID: 2 | Nome: João Santos | Email: joao@email.com
+
+ID do cliente: 1
+
+--- Livros disponíveis ---
+ID: 1 | Título: O Senhor dos Anéis | Disponíveis: 3
+ID: 2 | Título: 1984 | Disponíveis: 2
+
+ID do livro: 1
+Empréstimo registrado com sucesso! ID: 1
+```
+
+### Consultar relatório de livros mais emprestados
+
+```
+=== Relatórios ===
+
+1 - Livros disponíveis
+2 - Livros emprestados
+3 - Livros por autor
+4 - Empréstimos por livro
+5 - Clientes com empréstimos ativos
+6 - Voltar
+
+Escolha uma opção: 4
+
+ID: 1 | Título: O Senhor dos Anéis | Autor: J. R. R. Tolkien | Total de empréstimos: 5
+ID: 3 | Título: Dom Casmurro | Autor: Machado de Assis | Total de empréstimos: 3
+...
+5 livro(s) encontrado(s).
+```
+
+---
+
+## Integrantes da Equipe
+
+- **Willian de  Oliveira Ribeiro** 
+- *(Projeto individual)*
+
+---
+
+## Link do Kanban
+
+[Kanban do Projeto] — *https://trello.com/invite/b/6a515aec27b890fe13dfe472/ATTI074b4f8638a99af6e1ca77557de29ab739C910AD/bookstore-manager-cli*
