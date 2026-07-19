@@ -1,5 +1,6 @@
-// Importa o módulo nativo readline para capturar entrada do usuário no terminal
 import * as readline from "readline";
+// Função utilitária para extrair mensagem de erro em catch
+import { extrairMensagemErro } from "../utils/validators";
 
 // Interface que define a estrutura de uma opção do menu
 export interface MenuOption {
@@ -46,9 +47,14 @@ export abstract class Menu {
       const index = parseInt(input.trim()) - 1; // Converte para índice base 0
 
       if (index >= 0 && index < this.options.length - 1) {
-        // Se for uma opção válida (exceto a última), executa o handler correspondente
-        
-        await this.options[index].handler();
+        // Executa o handler dentro de try/catch para garantir que erros inesperados
+        // não interrompam a execução da aplicação
+        try {
+          await this.options[index].handler();
+        } catch (error) {
+          console.log(`\n${extrairMensagemErro(error)}`);
+          await this.question("Pressione Enter para continuar...");
+        }
       } else if (index === this.options.length - 1) {
         // Se for a última opção (Voltar / Encerrar), sai do loop
         running = false;

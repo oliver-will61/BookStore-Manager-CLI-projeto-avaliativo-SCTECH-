@@ -9,4 +9,9 @@ const pool = new Pool({
   password: process.env.DB_PASSWORD || "postgres",
 });
 
+// Previne que erros assíncronos de conexão (ex: banco cair após idle) derrubem a aplicação
+pool.on("error", (err) => {
+  console.error("\nErro inesperado na conexão com o banco de dados:", err.message);
+});
+
 export default pool;

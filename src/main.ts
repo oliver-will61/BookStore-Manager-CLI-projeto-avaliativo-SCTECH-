@@ -9,5 +9,10 @@ async function main(): Promise<void> {
   Menu.close();
 }
 
-// Chama a função principal para executar o programa
-main();
+// Captura erros não tratados que escaparem dos try/catch dos controllers
+// Exibe a mensagem, fecha a interface readline e encerra o processo
+main().catch((err) => {
+  console.error("\nErro fatal:", err instanceof Error ? err.message : err);
+  Menu.close();
+  process.exit(1);
+});
